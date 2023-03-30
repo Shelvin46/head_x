@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:head_x/core/uiConstWidget.dart';
 import 'package:head_x/core/uiConstant.dart';
 import 'package:head_x/main.dart';
+import 'package:head_x/presentation/order_details/main_order_details.dart';
+import 'package:head_x/presentation/order_details/order_summary.dart';
 import 'package:head_x/presentation/product_details/widgets/specifications.dart';
 import 'package:head_x/presentation/widgets/app_bar_widget.dart';
 
@@ -28,21 +30,30 @@ class MainProductDetails extends StatelessWidget {
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
             )),
           ),
-          Container(
-            width: myMediaQueryData.size.width * 0.5,
-            height: 50,
-            decoration: BoxDecoration(
-              color: Colors.blue,
-            ),
-            child: Center(
-                child: Text(
-              "Buy Now",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 25,
-                color: Colors.white,
+          InkWell(
+            onTap: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) {
+                  return MainOrderSummary();
+                },
+              ));
+            },
+            child: Container(
+              width: myMediaQueryData.size.width * 0.5,
+              height: 50,
+              decoration: BoxDecoration(
+                color: Colors.blue,
               ),
-            )),
+              child: Center(
+                  child: Text(
+                "Buy Now",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 25,
+                  color: Colors.white,
+                ),
+              )),
+            ),
           )
         ],
       ),

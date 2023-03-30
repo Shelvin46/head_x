@@ -4,6 +4,8 @@ import 'package:head_x/main.dart';
 import 'package:head_x/presentation/account/widgets/account_details.dart';
 import 'package:head_x/presentation/order_details/main_order_details.dart';
 import 'package:head_x/presentation/order_details/main_orders.dart';
+import 'package:head_x/presentation/profile/addresses/main_address.dart';
+import 'package:head_x/presentation/profile/edit_profile/edit_profile_one.dart';
 import 'package:head_x/presentation/widgets/app_bar_widget.dart';
 import 'package:head_x/presentation/wishlist/main_wishlist.dart';
 
@@ -114,7 +116,7 @@ class MainAccount extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               const Icon(
-                                Icons.shopping_bag,
+                                Icons.headphones_outlined,
                                 size: 35,
                               ),
                               Text(
@@ -147,12 +149,30 @@ class MainAccount extends StatelessWidget {
                         style: accText,
                       ),
                     ),
-                    AccountDetails(
-                        icon: Icons.account_circle_outlined,
-                        text: "Edit Profile"),
-                    AccountDetails(
-                        icon: Icons.location_on_outlined,
-                        text: "Saved Addresses"),
+                    InkWell(
+                      onTap: () {
+                        Navigator.push(context, MaterialPageRoute(
+                          builder: (context) {
+                            return EditProfileOne();
+                          },
+                        ));
+                      },
+                      child: AccountDetails(
+                          icon: Icons.account_circle_outlined,
+                          text: "Edit Profile"),
+                    ),
+                    InkWell(
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) {
+                            return MainAddresses();
+                          },
+                        ));
+                      },
+                      child: AccountDetails(
+                          icon: Icons.location_on_outlined,
+                          text: "Saved Addresses"),
+                    ),
                     AccountDetails(
                         icon: Icons.notifications_none,
                         text: "Nottification Settings"),

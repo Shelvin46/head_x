@@ -254,3 +254,38 @@ TextStyle cancelOrder = TextStyle(
   color: Colors.white,
 );
 //<------------------------------------------------------------------------Order Details----------------------------------------------------------------------------------------------------------------------------------->
+SizedBox paymentOneGap1 = SizedBox(
+  height: 10,
+);
+TextStyle paymentOneText1 = TextStyle(
+  fontWeight: FontWeight.bold,
+  fontSize: 24,
+);
+// TextStyle
+SizedBox paymentOneGap2 = SizedBox(
+  width: 20,
+);
+TextStyle paymentOneText2 = TextStyle(
+  fontWeight: FontWeight.bold,
+  fontSize: 25,
+  color: Colors.white,
+);
+//<------------------------------------------------------------------------PAyments one------------------------------------------------------------------------------------------------------------------------------------>
+SizedBox editGap1 = SizedBox(
+  height: myMediaQueryData.size.height * 0.05,
+);
+
+//<-------------------------------------------------------------------------Edit profile------------------------------------------------------------------------------------------------------------------------------------------->
+
+TextStyle addressText1 = TextStyle(
+  fontSize: 24,
+  fontWeight: FontWeight.bold,
+);
+SizedBox addressGap = SizedBox(
+  height: 12,
+);
+TextStyle addressName = TextStyle(
+  fontWeight: FontWeight.bold,
+  fontSize: 24,
+);
+//<--------------------------------------------------------------------------Addresses---------------------------------------------------------------------------------------------------------------------------------------------->
