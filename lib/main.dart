@@ -1,9 +1,11 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:head_x/presentation/auth/userLogin.dart';
 
 late MediaQueryData myMediaQueryData;
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   myMediaQueryData = MediaQueryData.fromWindow(WidgetsBinding.instance.window);
 
   runApp(const MyApp());
@@ -21,7 +23,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
         primarySwatch: Colors.blue,
       ),
-      home: const UserLogin(),
+      home: UserLogin(),
     );
   }
 }

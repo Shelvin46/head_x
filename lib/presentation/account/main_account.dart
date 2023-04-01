@@ -1,7 +1,13 @@
+import 'dart:developer';
+
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:head_x/core/uiConstWidget.dart';
+import 'package:head_x/firebase/firebase_services/google_signin.dart';
 import 'package:head_x/main.dart';
 import 'package:head_x/presentation/account/widgets/account_details.dart';
+import 'package:head_x/presentation/auth/userLogin.dart';
 import 'package:head_x/presentation/order_details/main_order_details.dart';
 import 'package:head_x/presentation/order_details/main_orders.dart';
 import 'package:head_x/presentation/profile/addresses/main_address.dart';
@@ -194,16 +200,26 @@ class MainAccount extends StatelessWidget {
                         icon: Icons.edit_document, text: "Terms & Conditions"),
                     AccountDetails(icon: Icons.info_outline, text: "About"),
                     Center(
-                      child: Container(
-                        height: myMediaQueryData.size.height * 0.04,
-                        width: myMediaQueryData.size.width * 0.2,
-                        color: Colors.blue,
-                        child: Padding(
-                          padding: EdgeInsets.only(
-                              left: myMediaQueryData.size.width * 0.02),
-                          child: Text(
-                            "Logout",
-                            style: logStyle,
+                      child: InkWell(
+                        onTap: () async {
+                          await FiireBaseGoogle().signOut();
+                          Navigator.pushReplacement(context, MaterialPageRoute(
+                            builder: (context) {
+                              return UserLogin();
+                            },
+                          ));
+                        },
+                        child: Container(
+                          height: myMediaQueryData.size.height * 0.04,
+                          width: myMediaQueryData.size.width * 0.2,
+                          color: Colors.blue,
+                          child: Padding(
+                            padding: EdgeInsets.only(
+                                left: myMediaQueryData.size.width * 0.02),
+                            child: Text(
+                              "Logout",
+                              style: logStyle,
+                            ),
                           ),
                         ),
                       ),

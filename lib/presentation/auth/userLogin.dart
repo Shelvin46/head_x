@@ -1,16 +1,23 @@
+import 'dart:developer';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:head_x/core/bottom_nav.dart';
 import 'package:head_x/core/uiConstWidget.dart';
 import 'package:head_x/core/uiConstant.dart';
+import 'package:head_x/firebase/firebase_services/google_signin.dart';
 import 'package:head_x/presentation/auth/userSignup.dart';
 
 import '../../main.dart';
 
 class UserLogin extends StatelessWidget {
-  const UserLogin({super.key});
+  UserLogin({super.key});
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    final _formKey = GlobalKey<FormState>();
     return Scaffold(
       backgroundColor: loginPageCr,
       body: SingleChildScrollView(
@@ -22,27 +29,60 @@ class UserLogin extends StatelessWidget {
             decoration: loginContainer,
           ),
           loginPageGap2,
-          Container(
-            height: myMediaQueryData.size.height * 0.07,
-            width: myMediaQueryData.size.height * 0.4,
-            decoration: textformRadius,
-            child: TextField(
-              decoration: InputDecoration(
-                  border: InputBorder.none,
-                  labelText: "  User id",
-                  labelStyle: labelColor),
-            ),
-          ),
-          loginPageGap2,
-          Container(
-            height: myMediaQueryData.size.height * 0.07,
-            width: myMediaQueryData.size.height * 0.4,
-            decoration: textformRadius,
-            child: TextField(
-              decoration: InputDecoration(
-                  border: InputBorder.none,
-                  labelText: "  Password",
-                  labelStyle: labelColor),
+          Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                Container(
+                  height: myMediaQueryData.size.height * 0.07,
+                  width: myMediaQueryData.size.height * 0.4,
+                  decoration: textformRadius,
+                  child: TextFormField(
+                    style: TextStyle(color: Colors.white),
+                    cursorColor: Colors.white,
+                    cursorHeight: 20,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter a mail id';
+                      }
+                      return null;
+                    },
+                    controller: emailController,
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      labelText: "User id",
+                      labelStyle: labelColor,
+                      contentPadding:
+                          EdgeInsets.only(left: 16.0), // add left padding
+                    ),
+                  ),
+                ),
+                loginPageGap2,
+                Container(
+                  height: myMediaQueryData.size.height * 0.07,
+                  width: myMediaQueryData.size.height * 0.4,
+                  decoration: textformRadius,
+                  child: TextFormField(
+                    obscureText: true,
+                    style: TextStyle(color: Colors.white),
+                    cursorColor: Colors.white,
+                    cursorHeight: 20,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter a Password';
+                      }
+                      return null;
+                    },
+                    controller: passwordController,
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      labelText: "Password",
+                      labelStyle: labelColor,
+                      contentPadding: const EdgeInsets.only(left: 16.0),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
           loginPageGap3,
@@ -53,11 +93,26 @@ class UserLogin extends StatelessWidget {
           loginPageGap4,
           InkWell(
             onTap: () {
-              Navigator.push(context, MaterialPageRoute(
-                builder: (context) {
-                  return BottomNav();
-                },
-              ));
+              if (_formKey.currentState!.validate()) {
+                FirebaseAuth.instance
+                    .signInWithEmailAndPassword(
+                        email: emailController.text,
+                        password: passwordController.text)
+                    .then((value) {
+                  Navigator.pushReplacement(context, MaterialPageRoute(
+                    builder: (context) {
+                      return BottomNav();
+                    },
+                  ));
+                }).onError((error, stackTrace) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(error.toString().split("]")[1].trim()),
+                      backgroundColor: Colors.blue,
+                    ),
+                  );
+                });
+              }
             },
             child: Padding(
               padding:
@@ -92,6 +147,28 @@ class UserLogin extends StatelessWidget {
               ],
             ),
           ),
+          SizedBox(
+            height: 20,
+          ),
+          InkWell(
+            onTap: () async {
+              await FiireBaseGoogle().signInWithGoogle();
+              Navigator.push(context, MaterialPageRoute(
+                builder: (context) {
+                  return BottomNav();
+                },
+              ));
+            },
+            child: Container(
+              width: 300,
+              height: 70,
+              decoration: BoxDecoration(
+                  image: DecorationImage(
+                image: AssetImage("assets/signin.png"),
+                fit: BoxFit.fill,
+              )),
+            ),
+          )
         ]),
       ),
     );
