@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:head_x/core/bottom_nav.dart';
@@ -7,12 +5,20 @@ import 'package:head_x/core/uiConstWidget.dart';
 import 'package:head_x/core/uiConstant.dart';
 import 'package:head_x/firebase/firebase_services/google_signin.dart';
 import 'package:head_x/presentation/auth/userSignup.dart';
-
 import '../../main.dart';
 
-class UserLogin extends StatelessWidget {
+class UserLogin extends StatefulWidget {
   UserLogin({super.key});
+
+  @override
+  State<UserLogin> createState() => _UserLoginState();
+}
+
+class _UserLoginState extends State<UserLogin> {
+  var isLoading = true;
+
   final emailController = TextEditingController();
+
   final passwordController = TextEditingController();
 
   @override
@@ -38,7 +44,7 @@ class UserLogin extends StatelessWidget {
                   width: myMediaQueryData.size.height * 0.4,
                   decoration: textformRadius,
                   child: TextFormField(
-                    style: TextStyle(color: Colors.white),
+                    style: const TextStyle(color: Colors.white),
                     cursorColor: Colors.white,
                     cursorHeight: 20,
                     validator: (value) {
@@ -52,8 +58,7 @@ class UserLogin extends StatelessWidget {
                       border: InputBorder.none,
                       labelText: "User id",
                       labelStyle: labelColor,
-                      contentPadding:
-                          EdgeInsets.only(left: 16.0), // add left padding
+                      contentPadding: const EdgeInsets.only(left: 16.0),
                     ),
                   ),
                 ),
@@ -64,7 +69,7 @@ class UserLogin extends StatelessWidget {
                   decoration: textformRadius,
                   child: TextFormField(
                     obscureText: true,
-                    style: TextStyle(color: Colors.white),
+                    style: const TextStyle(color: Colors.white),
                     cursorColor: Colors.white,
                     cursorHeight: 20,
                     validator: (value) {
@@ -147,12 +152,13 @@ class UserLogin extends StatelessWidget {
               ],
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 20,
           ),
           InkWell(
             onTap: () async {
               await FiireBaseGoogle().signInWithGoogle();
+              // ignore: use_build_context_synchronously
               Navigator.push(context, MaterialPageRoute(
                 builder: (context) {
                   return BottomNav();
@@ -162,7 +168,7 @@ class UserLogin extends StatelessWidget {
             child: Container(
               width: 300,
               height: 70,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                   image: DecorationImage(
                 image: AssetImage("assets/signin.png"),
                 fit: BoxFit.fill,

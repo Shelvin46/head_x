@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:head_x/presentation/auth/userLogin.dart';
+import 'package:head_x/presentation/splash_screen/splash_screen.dart';
 
 late MediaQueryData myMediaQueryData;
 void main() async {
@@ -23,7 +24,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
         primarySwatch: Colors.blue,
       ),
-      home: UserLogin(),
+      home: SplahScrenn(),
     );
   }
 }

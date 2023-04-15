@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:head_x/core/uiConstWidget.dart';
 import 'package:head_x/presentation/auth/userLogin.dart';
 
+import '../../firebase/firebase_services/login_with_email.dart';
 import '../../main.dart';
 
 class UserSignup extends StatelessWidget {
