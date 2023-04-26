@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 
 class ProductSpecification extends StatelessWidget {
   ProductSpecification(
@@ -16,7 +14,8 @@ class ProductSpecification extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       //  mainAxisAlignment: MainAxisAlignment.start,
-      // crossAxisAlignment: CrossAxisAlignment.stretch,
+      crossAxisAlignment: CrossAxisAlignment.start,
+
       children: [
         Padding(
           padding: EdgeInsets.only(left: 10),
@@ -29,11 +28,14 @@ class ProductSpecification extends StatelessWidget {
             ),
           ),
         ),
-        Text(
-          text2,
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 22,
+        Expanded(
+          child: Text(
+            text2,
+            style: TextStyle(
+              // overflow: TextOverflow.ellipsis,
+              fontWeight: FontWeight.bold,
+              fontSize: 22,
+            ),
           ),
         )
       ],

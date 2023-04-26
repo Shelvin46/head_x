@@ -1,21 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:head_x/presentation/categories/neckbands/neckbands.dart';
-import 'package:head_x/presentation/categories/premium_headphones/main_premium.dart';
-import 'package:head_x/presentation/categories/true_wireless/true_wireless.dart';
-import 'package:head_x/presentation/categories/wired_category/main_wired.dart';
+
 import 'package:head_x/presentation/categories/wireless_category/main_wireless.dart';
 import 'package:head_x/presentation/widgets/app_bar_widget.dart';
 
 // ignore: must_be_immutable
 class CategoryMain extends StatelessWidget {
   CategoryMain({super.key});
-  List pages = [
-    const MainWiredHeadphones(),
-    const MainWirelessHeadphones(),
-    const MainNeckbands(),
-    const MainTrueWireless(),
-    const MainPremiumHeadphones(),
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -35,41 +26,64 @@ class CategoryMain extends StatelessWidget {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(8.0),
-              child: GridView.count(
-                crossAxisCount: 2, // Number of columns in the grid
-                mainAxisSpacing: 30,
-                crossAxisSpacing: 8,
+              child: StreamBuilder(
+                stream: getproducts,
+                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  if (snapshot.data == null) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                  if (snapshot.data != []) {
+                    return GridView.count(
+                      crossAxisCount: 2, // Number of columns in the grid
+                      mainAxisSpacing: 30,
+                      crossAxisSpacing: 8,
 
-                children: List.generate(pages.length, (index) {
-                  return Column(
-                    children: [
-                      CircleAvatar(
-                        radius: 80,
-                        backgroundColor: Color(0xFFCFE0E1),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                      children: List.generate(snapshot.data.length, (index) {
+                        final document = snapshot.data[index];
+                        return Column(
                           children: [
-                            InkWell(
-                              onTap: () {
-                                Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) {
-                                    return pages[index];
-                                  },
-                                ));
-                              },
-                              child: Container(
-                                width: 100,
-                                height: 110,
-                                color: Colors.amber,
+                            CircleAvatar(
+                              radius: 80,
+                              backgroundColor: Color(0xFFCFE0E1),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  InkWell(
+                                    onTap: () {
+                                      Navigator.of(context)
+                                          .push(MaterialPageRoute(
+                                        builder: (context) {
+                                          return MainWirelessHeadphones(
+                                              id: document['id'],
+                                              title: document['name']);
+                                        },
+                                      ));
+                                    },
+                                    child: Container(
+                                      width: 100,
+                                      height: 110,
+                                      decoration: BoxDecoration(
+                                          image: DecorationImage(
+                                              image: NetworkImage(
+                                                  document['image']),
+                                              fit: BoxFit.fill)),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
+                            Text(document['name'])
                           ],
-                        ),
-                      ),
-                      const Text("Wired Headphones")
-                    ],
+                        );
+                      }),
+                    );
+                  }
+                  return Center(
+                    child: CircularProgressIndicator(),
                   );
-                }),
+                },
               ),
             ),
           )
@@ -77,4 +91,11 @@ class CategoryMain extends StatelessWidget {
       ),
     );
   }
+
+  Stream getproducts = (() async* {
+    final QuerySnapshot<Map<String, dynamic>> usersStream =
+        await FirebaseFirestore.instance.collection('category').get();
+    List productlist = usersStream.docs.map((e) => e.data()).toList();
+    yield productlist;
+  })();
 }

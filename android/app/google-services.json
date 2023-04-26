@@ -1,20 +1,57 @@
 {
   "project_info": {
-    "project_number": "1087261301095",
-    "project_id": "head-x",
-    "storage_bucket": "head-x.appspot.com"
+    "project_number": "675953914065",
+    "project_id": "head-x-admin",
+    "storage_bucket": "head-x-admin.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1087261301095:android:e060007578f15fac3677c2",
+        "mobilesdk_app_id": "1:675953914065:android:5ed537eff069baf1e6d5f0",
+        "android_client_info": {
+          "package_name": "com.example.head_x_admin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "675953914065-t9h49s2udirei9snoii2qk2i3qt5nhu8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.head_x_admin",
+            "certificate_hash": "cd03ec39a3a79f83b6a3fa7431f561aa8000d9a7"
+          }
+        },
+        {
+          "client_id": "675953914065-g65f3f1hrde9rfhglmijhine75aqm1a4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAbSAi3ha6ytBsueiMWh8xuVSXxVSbUpcY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "675953914065-g65f3f1hrde9rfhglmijhine75aqm1a4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:675953914065:android:c3ad92a739025972e6d5f0",
         "android_client_info": {
           "package_name": "in.brototype.headx"
         }
       },
       "oauth_client": [
         {
-          "client_id": "1087261301095-rqvov4ta9spfqe1l0o4vlj86hetq135r.apps.googleusercontent.com",
+          "client_id": "675953914065-44o2bguvr1t3bbgkgmqeistodtjd93bu.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "in.brototype.headx",
@@ -22,20 +59,20 @@
           }
         },
         {
-          "client_id": "1087261301095-dedcn30r2vlmogvit7nq838etfveffje.apps.googleusercontent.com",
+          "client_id": "675953914065-g65f3f1hrde9rfhglmijhine75aqm1a4.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCxi9kfrQna0XqSG82tPycHaH_-uEfkE00"
+          "current_key": "AIzaSyAbSAi3ha6ytBsueiMWh8xuVSXxVSbUpcY"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "1087261301095-1b3v1087cj77htf65ea51k65dq1d74qv.apps.googleusercontent.com",
+              "client_id": "675953914065-g65f3f1hrde9rfhglmijhine75aqm1a4.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

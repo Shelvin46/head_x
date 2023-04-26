@@ -18,7 +18,7 @@ class MainHome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea( 
+      body: SafeArea(
           child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -108,11 +108,11 @@ class MainHome extends StatelessWidget {
                                   bottom: myMediaQueryData.size.height * 0.01),
                               child: InkWell(
                                 onTap: () {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) {
-                                      return MainProductDetails();
-                                    },
-                                  ));
+                                  // Navigator.of(context).push(MaterialPageRoute(
+                                  //   builder: (context) {
+                                  //     return MainProductDetails();
+                                  //   },
+                                  // ));
                                 },
                                 child: Container(
                                   width: 100,
