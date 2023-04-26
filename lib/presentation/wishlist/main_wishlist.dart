@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:head_x/presentation/widgets/app_bar_widget.dart';
-
 import '../../core/uiConstWidget.dart';
 import '../../core/uiConstant.dart';
 import '../../main.dart';
@@ -26,7 +25,6 @@ class MainWishlist extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: GridView.builder(
-                  // shrinkWrap: true,
                   itemCount: 7,
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2, // Number of columns
@@ -92,39 +90,13 @@ class MainWishlist extends StatelessWidget {
                                 style: priceStyle,
                               ),
                               const Spacer(),
-                              Row(
-                                children: [
-                                  Container(
-                                    width: 20,
-                                    height: 20,
-                                    color: decrement,
-                                    child: const Center(child: Text("-")),
-                                  ),
-                                  Container(
-                                    width: 20,
-                                    height: 20,
-                                    color: productCount,
-                                    child: Center(
-                                        child: Text(
-                                      "1",
-                                      style: TextStyle(color: countColor),
-                                    )),
-                                  ),
-                                  Container(
-                                    width: 20,
-                                    height: 20,
-                                    color: catbarColor,
-                                    child: const Center(child: Text("+")),
-                                  )
-                                ],
-                              )
                             ],
                           ),
                           Text(
                             "realme Buds Classic",
                             style: productName,
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 4,
                           ),
                           Container(
@@ -132,7 +104,7 @@ class MainWishlist extends StatelessWidget {
                             height: 50,
                             decoration: BoxDecoration(
                                 border: Border.all(color: Colors.black)),
-                            child: Center(
+                            child: const Center(
                                 child: Text(
                               "Add to Cart",
                               style: TextStyle(
@@ -146,7 +118,7 @@ class MainWishlist extends StatelessWidget {
                             height: 50,
                             decoration: BoxDecoration(
                                 border: Border.all(color: Colors.black)),
-                            child: Center(
+                            child: const Center(
                                 child: Text(
                               "Remove",
                               style: TextStyle(

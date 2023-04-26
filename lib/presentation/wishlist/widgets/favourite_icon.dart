@@ -1,15 +1,10 @@
-// import 'dart:math';
-
-// ignore_for_file: use_build_context_synchronously
-
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:head_x/application/wishlist_cheking/wishlist_checking_bloc.dart';
+// import 'package:head_x/firebase/firebase_services/login_with_email.dart';
 import 'package:head_x/firebase/wishlist/wishlist_opreation.dart';
 
-import '../../../main.dart';
+// import '../../../main.dart';
 
 class FavouriteIcon extends StatelessWidget {
   const FavouriteIcon({
@@ -41,7 +36,30 @@ class FavouriteIcon extends StatelessWidget {
 
         if (wishlistIndex != -1) {
           return IconButton(
-            onPressed: () {},
+            onPressed: () async {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                },
+                barrierDismissible: false,
+              );
+              WishlistOpreations()
+                  .detletion(valuesOfEachCategory[index], index, userId);
+              BlocProvider.of<WishlistCheckingBloc>(context)
+                  .add(Checking(id: userId, idofMain: idOfAllproduct));
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  backgroundColor: Colors.blue,
+                  content: Text('Product Deleted Successflully'),
+                  duration: Duration(seconds: 2),
+                ),
+              );
+
+              Navigator.pop(context);
+            },
             icon: const Icon(
               Icons.favorite,
               color: Colors.blue,
@@ -60,14 +78,18 @@ class FavouriteIcon extends StatelessWidget {
                 },
                 barrierDismissible: false,
               );
-              log(valuesOfEachCategory[index]['id']);
-
-              // Add the product to the wishlist
               await WishlistOpreations()
                   .wishlistUpdate(valuesOfEachCategory[index], index, userId);
-
               BlocProvider.of<WishlistCheckingBloc>(context)
                   .add(Checking(id: userId, idofMain: idOfAllproduct));
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  backgroundColor: Colors.blue,
+                  content: Text('Product Added Successflully'),
+                  duration: Duration(seconds: 2),
+                ),
+              );
+
               Navigator.pop(context);
             },
             icon: const Icon(

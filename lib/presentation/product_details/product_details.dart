@@ -99,6 +99,7 @@ class MainProductDetails extends StatelessWidget {
                 width: double.infinity,
                 height: myMediaQueryData.size.height * 0.750,
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     productGap1,
                     FavouriteIcon(
@@ -122,38 +123,39 @@ class MainProductDetails extends StatelessWidget {
                           width: double.infinity,
                           height: myMediaQueryData.size.height * 0.5,
                           child: CarouselSlider.builder(
-                              itemCount:
-                                  state.productList[index]['images'].length,
-                              itemBuilder: (context, indexofEach, realIndex) {
-                                final images = state.productList[index]
-                                    ['images'][indexofEach];
-                                return Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                        image: DecorationImage(
-                                      image: NetworkImage(images),
-                                      fit: BoxFit.fill,
-                                    )),
-                                  ),
-                                );
+                            itemCount:
+                                state.productList[index]['images'].length,
+                            itemBuilder: (context, indexofEach, realIndex) {
+                              final images = state.productList[index]['images']
+                                  [indexofEach];
+                              return Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                    image: NetworkImage(images),
+                                    fit: BoxFit.fill,
+                                  )),
+                                ),
+                              );
+                            },
+                            options: CarouselOptions(
+                              pageSnapping: false,
+                              enableInfiniteScroll: false,
+                              height: 350,
+                              autoPlay: true,
+                              autoPlayInterval: const Duration(seconds: 3),
+                              viewportFraction: 1,
+                              onPageChanged: (index, reason) {
+                                BlocProvider.of<IndicatorBlocBloc>(context)
+                                    .add(ChangingIndex(index: index));
                               },
-                              options: CarouselOptions(
-                                pageSnapping: false,
-                                enableInfiniteScroll: false,
-                                height: 350,
-                                autoPlay: true,
-                                autoPlayInterval: const Duration(seconds: 3),
-                                viewportFraction: 1,
-                                onPageChanged: (index, reason) {
-                                  BlocProvider.of<IndicatorBlocBloc>(context)
-                                      .add(ChangingIndex(index: index));
-                                },
-                              )),
+                            ),
+                          ),
                         );
                       },
                     ),
-                    buildIndicator(),
+                    Center(child: buildIndicator()),
                     SizedBox(
                       height: 100,
                       child: BlocBuilder<ProductListBloc, ProductListState>(

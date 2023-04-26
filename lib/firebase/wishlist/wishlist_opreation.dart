@@ -1,6 +1,8 @@
 import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+List<dynamic> listForWishlist = [];
+
 class WishlistOpreations {
   Future<void> wishlistUpdate(
       Map<String, dynamic> vale, int index, String userId) async {
@@ -31,27 +33,37 @@ class WishlistOpreations {
     }
   }
 
-  // Future<List> get(String userId) async {
-  //   final docData =
-  //       await FirebaseFirestore.instance.collection('users').doc(userId).get();
-  //   // log((docData.data() as Map<String, dynamic>)['wishlist'].toString());
-  //   final eachData = (docData.data() as Map<String, dynamic>)['wishlist'];
-  //   for (var element in eachData) {
-  //     // log(element.toString());
-  //     final name = element['name'];
-  //     final id = element['id'];
-  //     print(name);
-  //     final checking =
-  //         await FirebaseFirestore.instance.collection('category').doc(id).get();
+  Future<void> detletion(
+      Map<String, dynamic> vale, int index, String userId) async {
+    final docData =
+        await FirebaseFirestore.instance.collection('users').doc(userId).get();
+    List<dynamic> data = docData.data()?['wishlist'] ?? [];
+    data.removeWhere((element) => element['name'] == vale['name']);
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .update({'wishlist': data});
+  }
 
-  //     for (var element
-  //         in (checking.data() as Map<String, dynamic>)['product']) {
-  //       if (element['name'] == name) {
-  //         print(element);
-  //       }
-  //     }
+  Future<List<dynamic>> get(String userId) async {
+    final docData =
+        await FirebaseFirestore.instance.collection('users').doc(userId).get();
 
-  //     // print((checking.data() as Map<String, dynamic>)['product'][0]['name'] == name);
-  //   }
-  // }
+    final eachData = (docData.data() as Map<String, dynamic>)['wishlist'];
+    for (var element in eachData) {
+      final name = element['name'];
+      final id = element['id'];
+
+      final checking =
+          await FirebaseFirestore.instance.collection('category').doc(id).get();
+
+      for (var element
+          in (checking.data() as Map<String, dynamic>)['product']) {
+        if (element['name'] == name) {
+          listForWishlist.add(element);
+        }
+      }
+    }
+    return listForWishlist;
+  }
 }

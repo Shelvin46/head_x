@@ -11,6 +11,8 @@ import '../../../core/uiConstWidget.dart';
 import '../../../firebase/wishlist/wishlist_opreation.dart';
 import '../../../main.dart';
 
+final String userId = FirebaseAuth.instance.currentUser!.uid;
+
 class MainWirelessHeadphones extends StatelessWidget {
   const MainWirelessHeadphones(
       {super.key, required this.id, required this.title});
@@ -21,7 +23,6 @@ class MainWirelessHeadphones extends StatelessWidget {
   Widget build(BuildContext context) {
     // log(x)
 
-    final String userId = FirebaseAuth.instance.currentUser!.uid;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       BlocProvider.of<ProductListBloc>(context).add(InitializeDisplay(id: id));
     });
