@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:meta/meta.dart';
@@ -17,6 +15,14 @@ class WishlistCheckingBloc
       final wishlistProducts = daocDataWishlist.data()?['wishlist'];
       return emit(WishlistCheckingState(
           valuesOfEachCategory: mainProductList,
+          valuesOfWishlist: wishlistProducts,
+          isLoading: false));
+    });
+    on<WishlistChecking>((event, emit) async {
+      final daocDataWishlist = await gettingData(event.id, "users");
+      final wishlistProducts = daocDataWishlist.data()?['wishlist'];
+      return emit(WishlistCheckingState(
+          valuesOfEachCategory: event.values,
           valuesOfWishlist: wishlistProducts,
           isLoading: false));
     });

@@ -1,11 +1,12 @@
 import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 List<dynamic> listForWishlist = [];
 
 class WishlistOpreations {
   Future<void> wishlistUpdate(
-      Map<String, dynamic> vale, int index, String userId) async {
+      Map<String, dynamic> vale, String userId) async {
     final FirebaseFirestore firestore = FirebaseFirestore.instance;
     final CollectionReference userCollection = firestore.collection('users');
     final DocumentSnapshot userDoc = await userCollection.doc(userId).get();
@@ -45,25 +46,25 @@ class WishlistOpreations {
         .update({'wishlist': data});
   }
 
-  Future<List<dynamic>> get(String userId) async {
+  Future<List<Map<String, dynamic>>> get(String userId) async {
     final docData =
         await FirebaseFirestore.instance.collection('users').doc(userId).get();
-
-    final eachData = (docData.data() as Map<String, dynamic>)['wishlist'];
+    final List<dynamic> eachData =
+        (docData.data() as Map<String, dynamic>)['wishlist'];
+    List<Map<String, dynamic>> wishlistProducts = [];
     for (var element in eachData) {
       final name = element['name'];
       final id = element['id'];
-
       final checking =
           await FirebaseFirestore.instance.collection('category').doc(id).get();
-
-      for (var element
+      for (var product
           in (checking.data() as Map<String, dynamic>)['product']) {
-        if (element['name'] == name) {
-          listForWishlist.add(element);
+        if (product['name'] == name) {
+          wishlistProducts.add(product);
+          break;
         }
       }
     }
-    return listForWishlist;
+    return wishlistProducts;
   }
 }

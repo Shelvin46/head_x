@@ -1,8 +1,14 @@
+// import 'dart:math';
+
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import 'package:head_x/presentation/categories/wireless_category/main_wireless.dart';
 import 'package:head_x/presentation/widgets/app_bar_widget.dart';
+
+String? globalId;
 
 // ignore: must_be_immutable
 class CategoryMain extends StatelessWidget {
@@ -10,6 +16,8 @@ class CategoryMain extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // log(x)
+
     return Scaffold(
       appBar: const PreferredSize(
         preferredSize: Size.fromHeight(50),
@@ -42,6 +50,7 @@ class CategoryMain extends StatelessWidget {
 
                       children: List.generate(snapshot.data.length, (index) {
                         final document = snapshot.data[index];
+                        globalId = document['id'];
                         return Column(
                           children: [
                             CircleAvatar(

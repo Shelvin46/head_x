@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:head_x/application/indicator_bloc/indicator_bloc_bloc.dart';
 import 'package:head_x/application/product_list/product_list_bloc.dart';
 import 'package:head_x/application/wishlist_cheking/wishlist_checking_bloc.dart';
+import 'package:head_x/application/wishlist_listing/wishlist_listing_bloc.dart';
 // import 'package:head_x/presentation/auth/userLogin.dart';
 import 'package:head_x/presentation/splash_screen/splash_screen.dart';
 
@@ -33,6 +34,11 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) {
             return WishlistCheckingBloc();
+          },
+        ),
+        BlocProvider(
+          create: (context) {
+            return WishlistListingBloc();
           },
         )
       ],

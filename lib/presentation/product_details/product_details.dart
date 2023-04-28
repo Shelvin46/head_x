@@ -1,9 +1,11 @@
 // import 'dart:math';
 
+// import 'dart:developer';
+
 import 'dart:developer';
 
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+// import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,13 +13,12 @@ import 'package:head_x/application/indicator_bloc/indicator_bloc_bloc.dart';
 import 'package:head_x/application/product_list/product_list_bloc.dart';
 import 'package:head_x/core/uiConstWidget.dart';
 import 'package:head_x/core/uiConstant.dart';
-import 'package:head_x/firebase/wishlist/wishlist_opreation.dart';
+// import 'package:head_x/firebase/wishlist/wishlist_opreation.dart';
 import 'package:head_x/main.dart';
-import 'package:head_x/presentation/order_details/order_summary.dart';
+// import 'package:head_x/presentation/order_details/order_summary.dart';
 import 'package:head_x/presentation/product_details/widgets/specifications.dart';
 import 'package:head_x/presentation/widgets/app_bar_widget.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-
 import '../wishlist/widgets/favourite_icon.dart';
 
 int length = 0;
@@ -54,14 +55,7 @@ class MainProductDetails extends StatelessWidget {
             )),
           ),
           InkWell(
-            onTap: () {
-              // WishlistOpreations().get(userId);
-              // Navigator.of(context).push(MaterialPageRoute(
-              //   builder: (context) {
-              //     return const MainOrderSummary();
-              //   },
-              // ));
-            },
+            onTap: () {},
             child: Container(
               width: myMediaQueryData.size.width * 0.5,
               height: 50,
@@ -103,21 +97,13 @@ class MainProductDetails extends StatelessWidget {
                   children: [
                     productGap1,
                     FavouriteIcon(
-                        index: index, userId: userId, idOfAllproduct: id),
-                    // BlocBuilder<ProductListBloc, ProductListState>(
-                    //   builder: (context, state) {
-                    //     return InkWell(
-                    //       onTap: () async {
-                    //         await WishlistOpreations().wishlistUpdate(
-                    //             state.productList[index], index, userId);
-                    //       },
-                    //       child: FavouriteIcon(
-                    //           index: index, userId: userId, idOfAllproduct: id),
-                    //     );
-                    //   },
-                    // ),
+                      index: index,
+                      userId: userId,
+                      idOfAllproduct: id,
+                    ),
                     BlocBuilder<ProductListBloc, ProductListState>(
                       builder: (context, state) {
+                        // log(index.toString());
                         length = state.productList[index]['images'].length;
                         return SizedBox(
                           width: double.infinity,

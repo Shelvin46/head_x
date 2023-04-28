@@ -3,6 +3,8 @@ import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:head_x/application/wishlist_listing/wishlist_listing_bloc.dart';
 import 'package:head_x/core/uiConstWidget.dart';
 import 'package:head_x/firebase/firebase_services/google_signin.dart';
 import 'package:head_x/main.dart';
@@ -80,6 +82,8 @@ class MainAccount extends StatelessWidget {
                                 return MainWishlist();
                               },
                             ));
+                            BlocProvider.of<WishlistListingBloc>(context)
+                                .add(InitializeWishlist());
                           },
                           child: Container(
                             width: myMediaQueryData.size.width * 0.4,

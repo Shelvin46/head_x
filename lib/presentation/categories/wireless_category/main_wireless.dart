@@ -7,6 +7,7 @@ import 'package:head_x/application/product_list/product_list_bloc.dart';
 import 'package:head_x/core/uiConstant.dart';
 import 'package:head_x/presentation/product_details/product_details.dart';
 import 'package:head_x/presentation/widgets/app_bar_widget.dart';
+import '../../../application/wishlist_cheking/wishlist_checking_bloc.dart';
 import '../../../core/uiConstWidget.dart';
 import '../../../firebase/wishlist/wishlist_opreation.dart';
 import '../../../main.dart';
@@ -72,6 +73,8 @@ class MainWirelessHeadphones extends StatelessWidget {
                                 );
                               },
                             ));
+                            BlocProvider.of<WishlistCheckingBloc>(context).add(
+                                Checking(id: userId, idofMain: product['id']));
                           },
                           child: Container(
                             color: Colors.white,
@@ -105,7 +108,6 @@ class MainWirelessHeadphones extends StatelessWidget {
                                         await WishlistOpreations()
                                             .wishlistUpdate(
                                                 state.productList[index],
-                                                index,
                                                 userId);
                                       },
                                       child: const Icon(

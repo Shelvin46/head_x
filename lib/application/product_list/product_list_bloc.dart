@@ -1,5 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:head_x/application/wishlist_listing/wishlist_listing_bloc.dart';
+
 import 'package:meta/meta.dart';
 
 part 'product_list_event.dart';
@@ -16,5 +18,13 @@ class ProductListBloc extends Bloc<ProductListEvent, ProductListState> {
       return emit(
           ProductListState(productList: productDetails, isLoading: false));
     });
+    on<WishlistProductDisplay>((event, emit) {
+      return emit(
+          ProductListState(productList: productOfWishlist, isLoading: false));
+    });
+    // on<WishlistDisplay>((event, emit) {
+    //   return emit(
+    //       ProductListState(productList: [], isLoading: false));
+    // });
   }
 }
