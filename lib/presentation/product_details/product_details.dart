@@ -13,12 +13,15 @@ import 'package:head_x/application/indicator_bloc/indicator_bloc_bloc.dart';
 import 'package:head_x/application/product_list/product_list_bloc.dart';
 import 'package:head_x/core/uiConstWidget.dart';
 import 'package:head_x/core/uiConstant.dart';
+import 'package:head_x/firebase/cart/cart_opreation.dart';
 // import 'package:head_x/firebase/wishlist/wishlist_opreation.dart';
 import 'package:head_x/main.dart';
+import 'package:head_x/presentation/categories/wireless_category/main_wireless.dart';
 // import 'package:head_x/presentation/order_details/order_summary.dart';
 import 'package:head_x/presentation/product_details/widgets/specifications.dart';
 import 'package:head_x/presentation/widgets/app_bar_widget.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import '../../application/cart_showing/cart_showing_bloc.dart';
 import '../wishlist/widgets/favourite_icon.dart';
 
 int length = 0;
@@ -31,49 +34,59 @@ class MainProductDetails extends StatelessWidget {
   });
   final int index;
   final String id;
-  final String userId = FirebaseAuth.instance.currentUser!.uid;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomSheet: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        key: UniqueKey(),
-        children: [
-          Container(
-            width: myMediaQueryData.size.width * 0.5,
-            height: 50,
-            decoration: BoxDecoration(
-                color: Colors.white,
-                border: Border.all(
-                  color: Colors.black,
-                )),
-            child: const Center(
-                child: Text(
-              "Add to cart",
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
-            )),
-          ),
-          InkWell(
-            onTap: () {},
-            child: Container(
-              width: myMediaQueryData.size.width * 0.5,
-              height: 50,
-              decoration: const BoxDecoration(
-                color: Colors.blue,
-              ),
-              child: const Center(
-                  child: Text(
-                "Buy Now",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 25,
-                  color: Colors.white,
+      bottomSheet: BlocBuilder<ProductListBloc, ProductListState>(
+        builder: (context, state) {
+          final data = state.productList[index];
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            key: UniqueKey(),
+            children: [
+              InkWell(
+                onTap: () {
+                  CartOperation().cartAdding(data, userId);
+                  BlocProvider.of<CartShowingBloc>(context).add(CartgShowing());
+                },
+                child: Container(
+                  width: myMediaQueryData.size.width * 0.5,
+                  height: 50,
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      border: Border.all(
+                        color: Colors.black,
+                      )),
+                  child: const Center(
+                      child: Text(
+                    "Add to cart",
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
+                  )),
                 ),
-              )),
-            ),
-          )
-        ],
+              ),
+              InkWell(
+                onTap: () {},
+                child: Container(
+                  width: myMediaQueryData.size.width * 0.5,
+                  height: 50,
+                  decoration: const BoxDecoration(
+                    color: Colors.blue,
+                  ),
+                  child: const Center(
+                      child: Text(
+                    "Buy Now",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 25,
+                      color: Colors.white,
+                    ),
+                  )),
+                ),
+              )
+            ],
+          );
+        },
       ),
       appBar: PreferredSize(
           preferredSize: const Size.fromHeight(50),

@@ -9,10 +9,10 @@ import 'package:head_x/presentation/product_details/product_details.dart';
 import 'package:head_x/presentation/widgets/app_bar_widget.dart';
 import '../../../application/wishlist_cheking/wishlist_checking_bloc.dart';
 import '../../../core/uiConstWidget.dart';
-import '../../../firebase/wishlist/wishlist_opreation.dart';
+// import '../../../firebase/wishlist/wishlist_opreation.dart';
 import '../../../main.dart';
 
-final String userId = FirebaseAuth.instance.currentUser!.uid;
+final String userId = FirebaseAuth.instance.currentUser!.email.toString();
 
 class MainWirelessHeadphones extends StatelessWidget {
   const MainWirelessHeadphones(
@@ -22,8 +22,6 @@ class MainWirelessHeadphones extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // log(x)
-
     WidgetsBinding.instance.addPostFrameCallback((_) {
       BlocProvider.of<ProductListBloc>(context).add(InitializeDisplay(id: id));
     });
@@ -80,44 +78,47 @@ class MainWirelessHeadphones extends StatelessWidget {
                             color: Colors.white,
                             child: Column(
                               children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Container(
-                                      width: myMediaQueryData.size.width * 0.1,
-                                      height:
-                                          myMediaQueryData.size.height * 0.02,
-                                      color: ratingColor,
-                                      child: Row(
-                                        children: [
-                                          Padding(
-                                            padding: cartPadding,
-                                            child: Text(
-                                              "4.0",
-                                              style: ratingStyle,
-                                            ),
-                                          ),
-                                          const Spacer(),
-                                          starIcon,
-                                        ],
-                                      ),
-                                    ),
-                                    InkWell(
-                                      onTap: () async {
-                                        await WishlistOpreations()
-                                            .wishlistUpdate(
-                                                state.productList[index],
-                                                userId);
-                                      },
-                                      child: const Icon(
-                                        Icons.favorite,
-                                        color: Colors.blue,
-                                        size: 34,
-                                      ),
-                                    )
-                                  ],
-                                ),
+                                SizedBox(
+                                    height:
+                                        myMediaQueryData.size.height * 0.03),
+                                // Row(
+                                //   mainAxisAlignment:
+                                //       MainAxisAlignment.spaceBetween,
+                                //   children: [
+                                //     Container(
+                                //       width: myMediaQueryData.size.width * 0.1,
+                                //       height:
+                                //           myMediaQueryData.size.height * 0.02,
+                                //       color: ratingColor,
+                                //       child: Row(
+                                //         children: [
+                                //           Padding(
+                                //             padding: cartPadding,
+                                //             child: Text(
+                                //               "4.0",
+                                //               style: ratingStyle,
+                                //             ),
+                                //           ),
+                                //           const Spacer(),
+                                //           starIcon,
+                                //         ],
+                                //       ),
+                                //     ),
+                                //     InkWell(
+                                //       onTap: () async {
+                                //         await WishlistOpreations()
+                                //             .wishlistUpdate(
+                                //                 state.productList[index],
+                                //                 userId);
+                                //       },
+                                //       child: const Icon(
+                                //         Icons.favorite,
+                                //         color: Colors.blue,
+                                //         size: 34,
+                                //       ),
+                                //     )
+                                //   ],
+                                // ),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [

@@ -12,7 +12,7 @@ class WishlistCheckingBloc
       final docData = await gettingData(event.idofMain, "category");
       final daocDataWishlist = await gettingData(event.id, "users");
       final mainProductList = docData.data()?['product'];
-      final wishlistProducts = daocDataWishlist.data()?['wishlist'];
+      final wishlistProducts = daocDataWishlist.data()?['wishlist'] ?? [];
       return emit(WishlistCheckingState(
           valuesOfEachCategory: mainProductList,
           valuesOfWishlist: wishlistProducts,
@@ -20,7 +20,7 @@ class WishlistCheckingBloc
     });
     on<WishlistChecking>((event, emit) async {
       final daocDataWishlist = await gettingData(event.id, "users");
-      final wishlistProducts = daocDataWishlist.data()?['wishlist'];
+      final wishlistProducts = daocDataWishlist.data()?['wishlist'] ?? [];
       return emit(WishlistCheckingState(
           valuesOfEachCategory: event.values,
           valuesOfWishlist: wishlistProducts,

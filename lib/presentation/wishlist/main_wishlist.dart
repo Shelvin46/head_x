@@ -40,6 +40,11 @@ class MainWishlist extends StatelessWidget {
                 padding: const EdgeInsets.all(8.0),
                 child: BlocBuilder<WishlistListingBloc, WishlistListingState>(
                   builder: (context, state) {
+                    if (state.isLoading) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
                     if (state.values.isEmpty) {
                       return const Center(
                         child: Text("No Data"),

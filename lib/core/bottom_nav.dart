@@ -1,6 +1,8 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:head_x/application/cart_showing/cart_showing_bloc.dart';
 import 'package:head_x/presentation/account/main_account.dart';
 import 'package:head_x/presentation/cart/main_cart.dart';
 import 'package:head_x/presentation/categories/main_category.dart';

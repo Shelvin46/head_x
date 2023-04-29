@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:head_x/application/wishlist_cheking/wishlist_checking_bloc.dart';
@@ -45,8 +47,7 @@ class FavouriteIcon extends StatelessWidget {
               );
               WishlistOpreations()
                   .detletion(valuesOfEachCategory[index], index, userId);
-              // listForWishlist?.removeWhere((element) =>
-              //     element['name'] == valuesOfEachCategory[index]['name']);
+
               BlocProvider.of<WishlistCheckingBloc>(context)
                   .add(Checking(id: userId, idofMain: idOfAllproduct));
 
@@ -77,6 +78,7 @@ class FavouriteIcon extends StatelessWidget {
                 },
                 barrierDismissible: false,
               );
+              log(userId);
               await WishlistOpreations()
                   .wishlistUpdate(valuesOfEachCategory[index], userId);
               // ignore: use_build_context_synchronously

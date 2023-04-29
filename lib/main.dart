@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:head_x/application/cart_showing/cart_showing_bloc.dart';
 import 'package:head_x/application/indicator_bloc/indicator_bloc_bloc.dart';
 import 'package:head_x/application/product_list/product_list_bloc.dart';
 import 'package:head_x/application/wishlist_cheking/wishlist_checking_bloc.dart';
@@ -39,6 +40,11 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) {
             return WishlistListingBloc();
+          },
+        ),
+        BlocProvider(
+          create: (context) {
+            return CartShowingBloc();
           },
         )
       ],

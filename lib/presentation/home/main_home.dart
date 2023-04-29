@@ -1,8 +1,15 @@
+// import 'dart:math';
+
+// import 'dart:math';
+
+import 'dart:developer';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:head_x/core/uiConstWidget.dart';
+import 'package:head_x/presentation/categories/wireless_category/main_wireless.dart';
 import 'package:head_x/presentation/product_details/product_details.dart';
 
 import '../../main.dart';
@@ -17,6 +24,9 @@ class MainHome extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // log(x)
+    // log(x)
+    log(userId);
     return Scaffold(
       body: SafeArea(
           child: SingleChildScrollView(

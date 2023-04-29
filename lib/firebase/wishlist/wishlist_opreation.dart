@@ -1,20 +1,19 @@
 import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+// import 'package:flutter_bloc/flutter_bloc.dart';
 
 List<dynamic> listForWishlist = [];
 
 class WishlistOpreations {
-  Future<void> wishlistUpdate(
-      Map<String, dynamic> vale, String userId) async {
+  Future<void> wishlistUpdate(Map<String, dynamic> vale, String userId) async {
+    log(userId);
     final FirebaseFirestore firestore = FirebaseFirestore.instance;
     final CollectionReference userCollection = firestore.collection('users');
     final DocumentSnapshot userDoc = await userCollection.doc(userId).get();
     if (!userDoc.exists) {
-      await userCollection.doc(userId).set({
-        'wishlist': [],
-      });
+      await userCollection.doc(userId).set({'wishlist': [], 'cart': []});
     }
+
     try {
       final docData = await FirebaseFirestore.instance
           .collection('users')
