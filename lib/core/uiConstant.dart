@@ -14,3 +14,4 @@ Color countColor = Colors.white;
 Color eachCatBar = const Color(0xFF2EA4A0);
 Color orderDetails = const Color(0xFF3A72DD);
 Color specColor = const Color.fromARGB(255, 92, 90, 90);
+Color cartPaymentBac = const Color(0xFFD9D9D9);

@@ -9,7 +9,6 @@ import 'package:head_x/presentation/product_details/product_details.dart';
 import 'package:head_x/presentation/widgets/app_bar_widget.dart';
 import '../../../application/wishlist_cheking/wishlist_checking_bloc.dart';
 import '../../../core/uiConstWidget.dart';
-// import '../../../firebase/wishlist/wishlist_opreation.dart';
 import '../../../main.dart';
 
 final String userId = FirebaseAuth.instance.currentUser!.email.toString();
@@ -23,7 +22,8 @@ class MainWirelessHeadphones extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      BlocProvider.of<ProductListBloc>(context).add(InitializeDisplay(id: id));
+      BlocProvider.of<WishlistCheckingBloc>(context)
+          .add(Checking(id: userId, idofMain: id));
     });
     return Scaffold(
       appBar: PreferredSize(
@@ -62,7 +62,7 @@ class MainWirelessHeadphones extends StatelessWidget {
                       itemBuilder: (BuildContext context, int index) {
                         final product = state.productList[index];
                         return InkWell(
-                          onTap: () {
+                          onTap: () async {
                             Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) {
                                 return MainProductDetails(
@@ -71,8 +71,7 @@ class MainWirelessHeadphones extends StatelessWidget {
                                 );
                               },
                             ));
-                            BlocProvider.of<WishlistCheckingBloc>(context).add(
-                                Checking(id: userId, idofMain: product['id']));
+                            log(index.toString());
                           },
                           child: Container(
                             color: Colors.white,

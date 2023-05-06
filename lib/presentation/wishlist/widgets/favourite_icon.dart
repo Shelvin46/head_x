@@ -1,13 +1,15 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:head_x/application/wishlist_cheking/wishlist_checking_bloc.dart';
 import 'package:head_x/application/wishlist_listing/wishlist_listing_bloc.dart';
-// import 'package:head_x/firebase/firebase_services/login_with_email.dart';
+import 'package:head_x/core/uiConstWidget.dart';
 import 'package:head_x/firebase/wishlist/wishlist_opreation.dart';
 
-// import '../../../main.dart';
+import '../../../application/product_list/product_list_bloc.dart';
 
 class FavouriteIcon extends StatelessWidget {
   const FavouriteIcon({
@@ -23,8 +25,6 @@ class FavouriteIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Dispatch a Checking event after the widget has been built
-
     return BlocBuilder<WishlistCheckingBloc, WishlistCheckingState>(
       builder: (context, state) {
         final valuesOfEachCategory = state.valuesOfEachCategory;
@@ -32,7 +32,7 @@ class FavouriteIcon extends StatelessWidget {
 
         final wishlistIndex = wishlistProducts.indexWhere((product) =>
             product['name'] == valuesOfEachCategory[index]['name']);
-
+        // log(wishlistIndex.toString());
         if (wishlistIndex != -1) {
           return IconButton(
             onPressed: () async {
@@ -45,12 +45,10 @@ class FavouriteIcon extends StatelessWidget {
                 },
                 barrierDismissible: false,
               );
-              WishlistOpreations()
+              await WishlistOpreations()
                   .detletion(valuesOfEachCategory[index], index, userId);
-
               BlocProvider.of<WishlistCheckingBloc>(context)
                   .add(Checking(id: userId, idofMain: idOfAllproduct));
-
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
                   backgroundColor: Colors.blue,
@@ -78,16 +76,17 @@ class FavouriteIcon extends StatelessWidget {
                 },
                 barrierDismissible: false,
               );
-              log(userId);
+
               await WishlistOpreations()
                   .wishlistUpdate(valuesOfEachCategory[index], userId);
-              // ignore: use_build_context_synchronously
+              // BlocProvider.of<WishlistListingBloc>(context)
+              //     .add(InitializeWishlist());
               BlocProvider.of<WishlistCheckingBloc>(context)
                   .add(Checking(id: userId, idofMain: idOfAllproduct));
-              // ignore: use_build_context_synchronously
-              BlocProvider.of<WishlistListingBloc>(context)
-                  .add(InitializeWishlist());
-              // ignore: use_build_context_synchronously
+
+              // BlocProvider.of<WishlistCheckingBloc>(context)
+              //     .add(Checking(id: userId, idofMain: idOfAllproduct));
+
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
                   backgroundColor: Colors.blue,
@@ -96,7 +95,6 @@ class FavouriteIcon extends StatelessWidget {
                 ),
               );
 
-              // ignore: use_build_context_synchronously
               Navigator.pop(context);
             },
             icon: const Icon(

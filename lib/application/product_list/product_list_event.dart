@@ -11,5 +11,7 @@ class InitializeDisplay extends ProductListEvent {
 
 class WishlistProductDisplay extends ProductListEvent {}
 
+class FromSearch extends ProductListEvent {}
+
 
 // class WishlistDisplay extends ProductListEvent {}

@@ -5,13 +5,18 @@
 import 'dart:developer';
 
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:flutter/foundation.dart';
+// import 'package:cloud_firestore/cloud_firestore.dart';/
+
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+// import 'package:head_x/application/search_bloc/search_bloc_bloc.dart';
 
 import 'package:head_x/core/uiConstWidget.dart';
 import 'package:head_x/presentation/categories/wireless_category/main_wireless.dart';
-import 'package:head_x/presentation/product_details/product_details.dart';
 
+import 'package:head_x/presentation/search/main_search.dart';
+
+import '../../application/countof_cart/countof_cart_bloc.dart';
 import '../../main.dart';
 
 class MainHome extends StatelessWidget {
@@ -24,8 +29,7 @@ class MainHome extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // log(x)
-    // log(x)
+    BlocProvider.of<CountofCartBloc>(context).add(InitializeCount());
     log(userId);
     return Scaffold(
       body: SafeArea(
@@ -48,15 +52,23 @@ class MainHome extends StatelessWidget {
             ),
             homePageGap2,
             GestureDetector(
-              child: Container(
+              child: SizedBox(
                 width: myMediaQueryData.size.width * 0.97,
                 child: Padding(
                   padding:
                       EdgeInsets.only(left: myMediaQueryData.size.width * 0.03),
                   child: TextField(
-                    style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
+                    style: const TextStyle(
+                        color: Color.fromARGB(255, 255, 255, 255)),
                     onTap: () {
-                      FocusManager.instance.primaryFocus?.unfocus();
+                      // FocusManager.instance.primaryFocus?.unfocus();
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) {
+                          return MainSearch();
+                        },
+                      ));
+                      // BlocProvider.of<SearchBlocBloc>(context)
+                      //     .add(InitialSearch());
                     },
                     // controller: searchController,
                     onChanged: (value) async {},

@@ -1,14 +1,9 @@
-// import 'dart:math';
-
-// import 'dart:developer';
-
-import 'dart:developer';
+// ignore_for_file: use_build_context_synchronously
 
 import 'package:carousel_slider/carousel_slider.dart';
-// import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:head_x/application/countof_cart/countof_cart_bloc.dart';
 import 'package:head_x/application/indicator_bloc/indicator_bloc_bloc.dart';
 import 'package:head_x/application/product_list/product_list_bloc.dart';
 import 'package:head_x/core/uiConstWidget.dart';
@@ -25,9 +20,10 @@ import '../../application/cart_showing/cart_showing_bloc.dart';
 import '../wishlist/widgets/favourite_icon.dart';
 
 int length = 0;
+int countOfProduct = 1;
 
 class MainProductDetails extends StatelessWidget {
-  MainProductDetails({
+  const MainProductDetails({
     super.key,
     required this.id,
     required this.index,
@@ -37,6 +33,7 @@ class MainProductDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // log
     return Scaffold(
       bottomSheet: BlocBuilder<ProductListBloc, ProductListState>(
         builder: (context, state) {
@@ -46,9 +43,21 @@ class MainProductDetails extends StatelessWidget {
             key: UniqueKey(),
             children: [
               InkWell(
-                onTap: () {
-                  CartOperation().cartAdding(data, userId);
+                onTap: () async {
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      },
+                      barrierDismissible: false);
+                  await CartOperation()
+                      .cartAdding(data, userId, context, countOfProduct);
                   BlocProvider.of<CartShowingBloc>(context).add(CartgShowing());
+                  BlocProvider.of<CountofCartBloc>(context)
+                      .add(InitializeCount());
+                  Navigator.pop(context);
                 },
                 child: Container(
                   width: myMediaQueryData.size.width * 0.5,
@@ -116,7 +125,6 @@ class MainProductDetails extends StatelessWidget {
                     ),
                     BlocBuilder<ProductListBloc, ProductListState>(
                       builder: (context, state) {
-                        // log(index.toString());
                         length = state.productList[index]['images'].length;
                         return SizedBox(
                           width: double.infinity,
@@ -236,35 +244,35 @@ class MainProductDetails extends StatelessWidget {
                   style: productPriceStyle,
                 ),
               ),
-              SizedBox(
-                height: 100,
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 10),
-                  child: ListView.separated(
-                      scrollDirection: Axis.horizontal,
-                      itemBuilder: (context, index) {
-                        return Column(
-                          children: [
-                            Expanded(
-                              child: Container(
-                                width: 50,
-                                height: 100,
-                                color: Colors.red,
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 5,
-                            ),
-                            const Text("Red")
-                          ],
-                        );
-                      },
-                      separatorBuilder: (context, index) {
-                        return const Padding(padding: EdgeInsets.all(8.0));
-                      },
-                      itemCount: 4),
-                ),
-              ),
+              // SizedBox(
+              //   height: 100,
+              //   child: Padding(
+              //     padding: const EdgeInsets.only(left: 10),
+              //     child: ListView.separated(
+              //         scrollDirection: Axis.horizontal,
+              //         itemBuilder: (context, index) {
+              //           return Column(
+              //             children: [
+              //               Expanded(
+              //                 child: Container(
+              //                   width: 50,
+              //                   height: 100,
+              //                   color: Colors.red,
+              //                 ),
+              //               ),
+              //               const SizedBox(
+              //                 height: 5,
+              //               ),
+              //               const Text("Red")
+              //             ],
+              //           );
+              //         },
+              //         separatorBuilder: (context, index) {
+              //           return const Padding(padding: EdgeInsets.all(8.0));
+              //         },
+              //         itemCount: 4),
+              //   ),
+              // ),
               productGap2,
               Padding(
                 padding:

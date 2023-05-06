@@ -4,6 +4,8 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:head_x/application/product_list/product_list_bloc.dart';
 
 import 'package:head_x/presentation/categories/wireless_category/main_wireless.dart';
 import 'package:head_x/presentation/widgets/app_bar_widget.dart';
@@ -55,7 +57,7 @@ class CategoryMain extends StatelessWidget {
                           children: [
                             CircleAvatar(
                               radius: 80,
-                              backgroundColor: Color(0xFFCFE0E1),
+                              backgroundColor: const Color(0xFFCFE0E1),
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
@@ -69,6 +71,9 @@ class CategoryMain extends StatelessWidget {
                                               title: document['name']);
                                         },
                                       ));
+                                      BlocProvider.of<ProductListBloc>(context)
+                                          .add(InitializeDisplay(
+                                              id: document['id']));
                                     },
                                     child: Container(
                                       width: 100,
@@ -89,7 +94,7 @@ class CategoryMain extends StatelessWidget {
                       }),
                     );
                   }
-                  return Center(
+                  return const Center(
                     child: CircularProgressIndicator(),
                   );
                 },

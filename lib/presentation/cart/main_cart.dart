@@ -1,11 +1,18 @@
 // import 'dart:ui';
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:head_x/application/cart_showing/cart_showing_bloc.dart';
+import 'package:head_x/application/countof_cart/countof_cart_bloc.dart';
 import 'package:head_x/core/uiConstWidget.dart';
 import 'package:head_x/core/uiConstant.dart';
+import 'package:head_x/firebase/cart/cart_opreation.dart';
 import 'package:head_x/main.dart';
+import 'package:head_x/presentation/payments/cart_payment.dart';
 import 'package:head_x/presentation/widgets/app_bar_widget.dart';
+
+import '../../application/order_summary/order_summary_bloc.dart';
 
 class MainCart extends StatelessWidget {
   const MainCart({super.key});
@@ -55,6 +62,7 @@ class MainCart extends StatelessWidget {
                       ),
                       itemBuilder: (BuildContext context, int index) {
                         final data = state.cartValues[index];
+                        // log(data['count'].toString());
                         return Container(
                           color: Colors.white,
                           child: Column(
@@ -83,46 +91,95 @@ class MainCart extends StatelessWidget {
                                     width: myMediaQueryData.size.width * 0.01,
                                   ),
                                   Text(
-                                    data['price'].toString(),
+                                    '\u20B9${data['price'].toString()}',
                                     style: priceStyle,
                                   ),
                                   const Spacer(),
-                                  Row(
-                                    children: [
-                                      Container(
-                                        width: 20,
-                                        height: 20,
-                                        color: decrement,
-                                        child: const Center(child: Text("-")),
-                                      ),
-                                      Container(
-                                        width: 20,
-                                        height: 20,
-                                        color: productCount,
-                                        child: Center(
-                                            child: Text(
-                                          "1",
-                                          style: TextStyle(color: countColor),
-                                        )),
-                                      ),
-                                      Container(
-                                        width: 20,
-                                        height: 20,
-                                        color: catbarColor,
-                                        child: const Center(child: Text("+")),
-                                      )
-                                    ],
+                                  BlocBuilder<CountofCartBloc,
+                                      CountofCartState>(
+                                    builder: (context, state) {
+                                      // log(index.toString());
+                                      final count = state.cartProducts[index];
+                                      return Row(
+                                        children: [
+                                          InkWell(
+                                            onTap: () async {
+                                              await CartOperation()
+                                                  .decrementCount(
+                                                      data, context);
+                                              // ignore: use_build_context_synchronously
+                                              BlocProvider.of<CountofCartBloc>(
+                                                      context)
+                                                  .add(InitializeCount());
+                                            },
+                                            child: Container(
+                                              width: 30,
+                                              height: 30,
+                                              color: decrement,
+                                              child: const Center(
+                                                  child: Text("-")),
+                                            ),
+                                          ),
+                                          Container(
+                                            width: 40,
+                                            height: 40,
+                                            color: productCount,
+                                            child: Center(
+                                                child: Text(
+                                              count['count'].toString(),
+                                              style:
+                                                  TextStyle(color: countColor),
+                                            )),
+                                          ),
+                                          InkWell(
+                                            onTap: () async {
+                                              await CartOperation()
+                                                  .incrementCount(data);
+                                              // ignore: use_build_context_synchronously
+                                              BlocProvider.of<CountofCartBloc>(
+                                                      context)
+                                                  .add(InitializeCount());
+                                            },
+                                            child: Container(
+                                              width: 30,
+                                              height: 30,
+                                              color: catbarColor,
+                                              child: const Center(
+                                                  child: Text("+")),
+                                            ),
+                                          )
+                                        ],
+                                      );
+                                    },
                                   )
                                 ],
                               ),
                               Text(
-                                data['name'].toString(),
+                                data['name'],
                                 style: productName,
                               ),
                               Expanded(
                                   child: Padding(
                                 padding: deletePadding,
-                                child: deleteIcon,
+                                child: InkWell(
+                                    onTap: () async {
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return const Center(
+                                            child: CircularProgressIndicator(),
+                                          );
+                                        },
+                                        barrierDismissible: false,
+                                      );
+                                      await CartOperation().deletion(data);
+                                      // ignore: use_build_context_synchronously
+                                      BlocProvider.of<CartShowingBloc>(context)
+                                          .add(CartgShowing());
+                                      // ignore: use_build_context_synchronously
+                                      Navigator.pop(context);
+                                    },
+                                    child: deleteIcon),
                               )),
                             ],
                           ),
@@ -136,15 +193,26 @@ class MainCart extends StatelessWidget {
           ],
         ),
       ),
-      bottomSheet: Container(
-        width: double.infinity,
-        height: 60,
-        color: catbarColor,
-        child: Center(
-            child: Text(
-          "Check Out",
-          style: checkOut,
-        )),
+      bottomSheet: InkWell(
+        onTap: () {
+          BlocProvider.of<OrderSummaryBloc>(context)
+              .add(CartCheckoutInitialize());
+          Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) {
+              return CartCheckout();
+            },
+          ));
+        },
+        child: Container(
+          width: double.infinity,
+          height: 60,
+          color: catbarColor,
+          child: Center(
+              child: Text(
+            "Check Out",
+            style: checkOut,
+          )),
+        ),
       ),
     );
   }

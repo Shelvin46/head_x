@@ -14,3 +14,5 @@ class WishlistChecking extends WishlistCheckingEvent {
   String id;
   WishlistChecking({required this.values, required this.id});
 }
+
+class SearchWishlist extends WishlistCheckingEvent {}

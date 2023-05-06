@@ -277,15 +277,22 @@ SizedBox editGap1 = SizedBox(
 
 //<-------------------------------------------------------------------------Edit profile------------------------------------------------------------------------------------------------------------------------------------------->
 
-TextStyle addressText1 = TextStyle(
+TextStyle addressText1 = const TextStyle(
   fontSize: 24,
   fontWeight: FontWeight.bold,
 );
-SizedBox addressGap = SizedBox(
+SizedBox addressGap = const SizedBox(
   height: 12,
 );
-TextStyle addressName = TextStyle(
+TextStyle addressName = const TextStyle(
   fontWeight: FontWeight.bold,
   fontSize: 24,
 );
 //<--------------------------------------------------------------------------Addresses---------------------------------------------------------------------------------------------------------------------------------------------->
+TextStyle cartPaymentName = const TextStyle(
+  fontWeight: FontWeight.bold,
+  fontSize: 15,
+);
+// TextStyle cartPriceStyle=
+TextStyle cartPriceStyle =
+    const TextStyle(fontWeight: FontWeight.bold, fontSize: 25);
