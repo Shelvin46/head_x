@@ -1,22 +1,16 @@
-// import 'dart:math';
-
-// import 'dart:math';
-
-import 'dart:developer';
-
 import 'package:carousel_slider/carousel_slider.dart';
 // import 'package:cloud_firestore/cloud_firestore.dart';/
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:head_x/application/product_list/product_list_bloc.dart';
+import 'package:head_x/application/recently_products/recently_products_bloc.dart';
+import 'package:head_x/application/wishlist_cheking/wishlist_checking_bloc.dart';
 // import 'package:head_x/application/search_bloc/search_bloc_bloc.dart';
-
 import 'package:head_x/core/uiConstWidget.dart';
-import 'package:head_x/presentation/categories/wireless_category/main_wireless.dart';
-
+import 'package:head_x/presentation/product_details/product_details.dart';
 import 'package:head_x/presentation/search/main_search.dart';
-
 import '../../application/countof_cart/countof_cart_bloc.dart';
+import '../../application/search_bloc/search_bloc_bloc.dart';
 import '../../main.dart';
 
 class MainHome extends StatelessWidget {
@@ -29,8 +23,14 @@ class MainHome extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    BlocProvider.of<CountofCartBloc>(context).add(InitializeCount());
-    log(userId);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      BlocProvider.of<CountofCartBloc>(context).add(InitializeCount());
+      BlocProvider.of<RecentlyProductsBloc>(context).add(InitialRecently());
+      BlocProvider.of<ProductListBloc>(context).add(RecentlyDetails());
+      BlocProvider.of<WishlistCheckingBloc>(context).add(RecentlyWishlist());
+    });
+
+    // log(userId);
     return Scaffold(
       body: SafeArea(
           child: SingleChildScrollView(
@@ -61,16 +61,15 @@ class MainHome extends StatelessWidget {
                     style: const TextStyle(
                         color: Color.fromARGB(255, 255, 255, 255)),
                     onTap: () {
-                      // FocusManager.instance.primaryFocus?.unfocus();
+                      FocusManager.instance.primaryFocus?.unfocus();
                       Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) {
-                          return MainSearch();
+                          return const MainSearch();
                         },
                       ));
-                      // BlocProvider.of<SearchBlocBloc>(context)
-                      //     .add(InitialSearch());
+                      BlocProvider.of<SearchBlocBloc>(context)
+                          .add(InitialSearch());
                     },
-                    // controller: searchController,
                     onChanged: (value) async {},
                     decoration: const InputDecoration(
                       focusedBorder: UnderlineInputBorder(
@@ -113,100 +112,133 @@ class MainHome extends StatelessWidget {
             ),
             lstviewGap,
             Padding(
-              padding: const EdgeInsets.only(left: 10),
-              child: SizedBox(
-                height: myMediaQueryData.size.height * 0.2083,
-                child: ListView.separated(
-                    scrollDirection: Axis.horizontal,
-                    itemBuilder: (context, index) {
-                      return Container(
-                        width: myMediaQueryData.size.width * 0.3300,
-                        color: const Color.fromARGB(255, 172, 184, 190),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.only(
-                                  bottom: myMediaQueryData.size.height * 0.01),
-                              child: InkWell(
-                                onTap: () {
-                                  // Navigator.of(context).push(MaterialPageRoute(
-                                  //   builder: (context) {
-                                  //     return MainProductDetails();
-                                  //   },
-                                  // ));
-                                },
-                                child: Container(
-                                  width: 100,
-                                  height: 100,
-                                  color: Colors.white,
-                                ),
+              padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+              child: BlocBuilder<RecentlyProductsBloc, RecentlyProductsState>(
+                builder: (context, state) {
+                  if (state.isLoadindg == true) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                  return GridView.builder(
+                    shrinkWrap: true,
+                    physics: const ScrollPhysics(),
+                    itemCount: state.products.length,
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      mainAxisSpacing: 30.0,
+                      crossAxisSpacing: 10.0,
+                      mainAxisExtent: 250,
+                    ),
+                    itemBuilder: (BuildContext context, int index) {
+                      final eachProduct = state.products[index];
+                      return InkWell(
+                        onTap: () async {
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) {
+                              return MainProductDetails(
+                                  id: eachProduct['id'], index: index);
+                            },
+                          ));
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: const Color.fromARGB(255, 242, 240, 240),
+                              borderRadius: BorderRadius.circular(10)),
+                          child: Column(
+                            children: [
+                              SizedBox(
+                                  height: myMediaQueryData.size.height * 0.03),
+                              // Row(
+                              //   mainAxisAlignment:
+                              //       MainAxisAlignment.spaceBetween,
+                              //   children: [
+                              //     Container(
+                              //       width: myMediaQueryData.size.width * 0.1,
+                              //       height:
+                              //           myMediaQueryData.size.height * 0.02,
+                              //       color: ratingColor,
+                              //       child: Row(
+                              //         children: [
+                              //           Padding(
+                              //             padding: cartPadding,
+                              //             child: Text(
+                              //               "4.0",
+                              //               style: ratingStyle,
+                              //             ),
+                              //           ),
+                              //           const Spacer(),
+                              //           starIcon,
+                              //         ],
+                              //       ),
+                              //     ),
+                              //     InkWell(
+                              //       onTap: () async {
+                              //         await WishlistOpreations()
+                              //             .wishlistUpdate(
+                              //                 state.productList[index],
+                              //                 userId);
+                              //       },
+                              //       child: const Icon(
+                              //         Icons.favorite,
+                              //         color: Colors.blue,
+                              //         size: 34,
+                              //       ),
+                              //     )
+                              //   ],
+                              // ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    height: 140,
+                                    width: 130,
+                                    // color: Colors.amber,
+                                    decoration: BoxDecoration(
+                                        image: DecorationImage(
+                                            fit: BoxFit.fill,
+                                            image: NetworkImage(
+                                                eachProduct['images'][0]))),
+                                  )
+                                ],
                               ),
-                            ),
-                            const SizedBox(
-                              child: Text(
-                                "realme Buds Classic",
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold),
+                              cartGap2,
+                              Row(
+                                children: [
+                                  SizedBox(
+                                    width: myMediaQueryData.size.width * 0.01,
+                                  ),
+                                  Text.rich(
+                                    TextSpan(
+                                      text: '\u20B9',
+                                      style: const TextStyle(
+                                          fontSize: 24, color: Colors.black),
+                                      children: <TextSpan>[
+                                        TextSpan(
+                                          text: eachProduct['price']
+                                              .toString(), // Price value
+                                          style: const TextStyle(
+                                              fontSize: 24,
+                                              color: Colors.black),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  const Spacer(),
+                                ],
                               ),
-                            )
-                          ],
+                              Text(
+                                eachProduct['name'],
+                                style: productName,
+                              ),
+                            ],
+                          ),
                         ),
                       );
                     },
-                    separatorBuilder: (context, index) {
-                      return gap2;
-                    },
-                    itemCount: 10),
-              ),
-            ),
-            lstviewGap,
-            Padding(
-              padding:
-                  EdgeInsets.only(left: myMediaQueryData.size.width * 0.04),
-              child: trendingText,
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 10),
-              child: SizedBox(
-                height: myMediaQueryData.size.height * 0.2083,
-                child: ListView.separated(
-                    scrollDirection: Axis.horizontal,
-                    itemBuilder: (context, index) {
-                      return Container(
-                        width: myMediaQueryData.size.width * 0.3300,
-                        color: const Color.fromARGB(255, 172, 184, 190),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.only(
-                                  bottom: myMediaQueryData.size.height * 0.01),
-                              child: Container(
-                                width: 100,
-                                height: 100,
-                                color: Colors.white,
-                              ),
-                            ),
-                            const SizedBox(
-                              child: Text(
-                                "realme Buds Classic",
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            )
-                          ],
-                        ),
-                      );
-                    },
-                    separatorBuilder: (context, index) {
-                      return gap2;
-                    },
-                    itemCount: 10),
+                  );
+                },
               ),
             ),
           ],

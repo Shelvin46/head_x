@@ -19,6 +19,7 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import '../../application/cart_showing/cart_showing_bloc.dart';
 import '../wishlist/widgets/favourite_icon.dart';
 
+
 int length = 0;
 int countOfProduct = 1;
 
@@ -44,6 +45,7 @@ class MainProductDetails extends StatelessWidget {
             children: [
               InkWell(
                 onTap: () async {
+
                   showDialog(
                       context: context,
                       builder: (BuildContext context) {

@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../application/cart_showing/cart_showing_bloc.dart';
-import '../../application/countof_cart/countof_cart_bloc.dart';
+// import '../../application/countof_cart/countof_cart_bloc.dart';
 import '../../presentation/categories/wireless_category/main_wireless.dart';
 
 class CartOperation {
@@ -16,7 +16,7 @@ class CartOperation {
     final CollectionReference userCollection = firestore.collection('users');
     final DocumentSnapshot userDoc = await userCollection.doc(userId).get();
     if (!userDoc.exists) {
-      await userCollection.doc(userId).set({'wishlist': [], 'cart': []});
+      await userCollection.doc(userId).set({'wishlist': [], 'cart': [],'recently':[]});
     }
     try {
       final docData =

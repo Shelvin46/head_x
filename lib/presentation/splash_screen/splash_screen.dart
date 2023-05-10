@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:head_x/application/recently_products/recently_products_bloc.dart';
 import 'package:head_x/core/bottom_nav.dart';
 import 'package:head_x/presentation/auth/userLogin.dart';
 
@@ -20,6 +22,7 @@ class _SplahScrennState extends State<SplahScrenn> {
 
   @override
   Widget build(BuildContext context) {
+    BlocProvider.of<RecentlyProductsBloc>(context).add(InitialRecently());
     return Scaffold(
       body: SizedBox(
         width: double.infinity,

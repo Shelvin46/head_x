@@ -13,5 +13,9 @@ class WishlistProductDisplay extends ProductListEvent {}
 
 class FromSearch extends ProductListEvent {}
 
+class SearchIntoDetails extends ProductListEvent {}
+
+class RecentlyDetails extends ProductListEvent {}
+
 
 // class WishlistDisplay extends ProductListEvent {}

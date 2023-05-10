@@ -3,9 +3,12 @@
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:head_x/application/search_bloc/search_bloc_bloc.dart';
+// import 'package:head_x/application/search_bloc/search_bloc_bloc.dart';
 import 'package:head_x/application/wishlist_listing/wishlist_listing_bloc.dart';
 
 import 'package:meta/meta.dart';
+
+import '../../firebase/recently/recently_opreation.dart';
 
 part 'product_list_event.dart';
 part 'product_list_state.dart';
@@ -25,6 +28,16 @@ class ProductListBloc extends Bloc<ProductListEvent, ProductListState> {
       return emit(
           ProductListState(productList: productOfWishlist, isLoading: false));
     });
-   
+    on<SearchIntoDetails>((event, emit) async {
+      List<dynamic> productDetails = await get();
+      return emit(
+          ProductListState(productList: productDetails, isLoading: false));
+    });
+    on<RecentlyDetails>((event, emit) async {
+      List<Map<String, dynamic>> recentlyProducts =
+          await RecentlyOpreation().recentlyGet();
+      return emit(
+          ProductListState(productList: recentlyProducts, isLoading: false));
+    });
   }
 }

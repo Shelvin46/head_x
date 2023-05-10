@@ -7,6 +7,7 @@ import 'package:head_x/application/countof_cart/countof_cart_bloc.dart';
 import 'package:head_x/application/indicator_bloc/indicator_bloc_bloc.dart';
 import 'package:head_x/application/order_summary/order_summary_bloc.dart';
 import 'package:head_x/application/product_list/product_list_bloc.dart';
+import 'package:head_x/application/recently_products/recently_products_bloc.dart';
 import 'package:head_x/application/search_bloc/search_bloc_bloc.dart';
 import 'package:head_x/application/wishlist_cheking/wishlist_checking_bloc.dart';
 import 'package:head_x/application/wishlist_listing/wishlist_listing_bloc.dart';
@@ -69,6 +70,11 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) {
             return AllProductsBloc();
+          },
+        ),
+        BlocProvider(
+          create: (context) {
+            return RecentlyProductsBloc();
           },
         )
       ],

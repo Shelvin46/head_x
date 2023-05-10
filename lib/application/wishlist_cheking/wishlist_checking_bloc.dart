@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 // import 'package:flutter/gestures.dart';
 // import 'package:head_x/application/product_list/product_list_bloc.dart';
 import 'package:head_x/application/search_bloc/search_bloc_bloc.dart';
+import 'package:head_x/firebase/recently/recently_opreation.dart';
 import 'package:head_x/presentation/categories/wireless_category/main_wireless.dart';
 import 'package:meta/meta.dart';
 part 'wishlist_checking_event.dart';
@@ -33,9 +34,20 @@ class WishlistCheckingBloc
       final docData = await gettingData(userId, "users");
       final wishlistProducts = docData.data()?['wishlist'] ?? [];
       List<dynamic> searchProducts = await get();
-      
+
       return emit(WishlistCheckingState(
           valuesOfEachCategory: searchProducts,
+          valuesOfWishlist: wishlistProducts,
+          isLoading: false));
+    });
+    on<RecentlyWishlist>((event, emit) async {
+      List<Map<String, dynamic>> recentlyAllProducts =
+          await RecentlyOpreation().recentlyGet();
+      final recentlyProducts = await gettingData(userId, "users");
+      List<dynamic> wishlistProducts =
+          recentlyProducts.data()?['wishlist'] ?? [];
+      return emit(WishlistCheckingState(
+          valuesOfEachCategory: recentlyAllProducts,
           valuesOfWishlist: wishlistProducts,
           isLoading: false));
     });

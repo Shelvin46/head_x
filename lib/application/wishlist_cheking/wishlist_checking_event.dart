@@ -16,3 +16,5 @@ class WishlistChecking extends WishlistCheckingEvent {
 }
 
 class SearchWishlist extends WishlistCheckingEvent {}
+
+class RecentlyWishlist extends WishlistCheckingEvent {}

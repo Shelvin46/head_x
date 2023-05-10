@@ -5,11 +5,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:head_x/application/wishlist_cheking/wishlist_checking_bloc.dart';
-import 'package:head_x/application/wishlist_listing/wishlist_listing_bloc.dart';
-import 'package:head_x/core/uiConstWidget.dart';
 import 'package:head_x/firebase/wishlist/wishlist_opreation.dart';
-
-import '../../../application/product_list/product_list_bloc.dart';
 
 class FavouriteIcon extends StatelessWidget {
   const FavouriteIcon({
@@ -29,10 +25,9 @@ class FavouriteIcon extends StatelessWidget {
       builder: (context, state) {
         final valuesOfEachCategory = state.valuesOfEachCategory;
         final wishlistProducts = state.valuesOfWishlist;
-
         final wishlistIndex = wishlistProducts.indexWhere((product) =>
             product['name'] == valuesOfEachCategory[index]['name']);
-        // log(wishlistIndex.toString());
+        log(wishlistIndex.toString());
         if (wishlistIndex != -1) {
           return IconButton(
             onPressed: () async {
@@ -48,7 +43,7 @@ class FavouriteIcon extends StatelessWidget {
               await WishlistOpreations()
                   .detletion(valuesOfEachCategory[index], index, userId);
               BlocProvider.of<WishlistCheckingBloc>(context)
-                  .add(Checking(id: userId, idofMain: idOfAllproduct));
+                  .add(SearchWishlist());
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
                   backgroundColor: Colors.blue,
@@ -79,14 +74,8 @@ class FavouriteIcon extends StatelessWidget {
 
               await WishlistOpreations()
                   .wishlistUpdate(valuesOfEachCategory[index], userId);
-              // BlocProvider.of<WishlistListingBloc>(context)
-              //     .add(InitializeWishlist());
               BlocProvider.of<WishlistCheckingBloc>(context)
-                  .add(Checking(id: userId, idofMain: idOfAllproduct));
-
-              // BlocProvider.of<WishlistCheckingBloc>(context)
-              //     .add(Checking(id: userId, idofMain: idOfAllproduct));
-
+                  .add(SearchWishlist());
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
                   backgroundColor: Colors.blue,

@@ -58,7 +58,7 @@ class MainWishlist extends StatelessWidget {
                         crossAxisCount: 2, // Number of columns
                         mainAxisSpacing: 30.0, // Spacing between rows
                         crossAxisSpacing: 10.0, // Spacing between columns
-                        mainAxisExtent: 340,
+                        mainAxisExtent: 287,
                       ),
                       itemBuilder: (BuildContext context, int index) {
                         final data = state.values[index];
@@ -72,8 +72,6 @@ class MainWishlist extends StatelessWidget {
                             ));
                             BlocProvider.of<ProductListBloc>(context)
                                 .add(WishlistProductDisplay());
-                            log(index.toString());
-                            log(data['id']);
                             BlocProvider.of<WishlistCheckingBloc>(context).add(
                                 WishlistChecking(
                                     values: state.values, id: userId));
@@ -148,20 +146,20 @@ class MainWishlist extends StatelessWidget {
                                 const SizedBox(
                                   height: 4,
                                 ),
-                                Container(
-                                  width: double.infinity,
-                                  height: 50,
-                                  decoration: BoxDecoration(
-                                      border: Border.all(color: Colors.black)),
-                                  child: const Center(
-                                      child: Text(
-                                    "Add to Cart",
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 30,
-                                        color: Colors.blue),
-                                  )),
-                                ),
+                                // Container(
+                                //   width: double.infinity,
+                                //   height: 50,
+                                //   decoration: BoxDecoration(
+                                //       border: Border.all(color: Colors.black)),
+                                //   child: const Center(
+                                //       child: Text(
+                                //     "Add to Cart",
+                                //     style: TextStyle(
+                                //         fontWeight: FontWeight.bold,
+                                //         fontSize: 30,
+                                //         color: Colors.blue),
+                                //   )),
+                                // ),
                                 InkWell(
                                   onTap: () {
                                     WishlistOpreations()
