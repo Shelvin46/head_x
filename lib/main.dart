@@ -1,6 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:head_x/application/address_selecting/address_selecting_bloc.dart';
+import 'package:head_x/application/address_showing/address_showing_bloc.dart';
 import 'package:head_x/application/all_products/all_products_bloc.dart';
 import 'package:head_x/application/cart_showing/cart_showing_bloc.dart';
 import 'package:head_x/application/countof_cart/countof_cart_bloc.dart';
@@ -76,7 +78,17 @@ class MyApp extends StatelessWidget {
           create: (context) {
             return RecentlyProductsBloc();
           },
-        )
+        ),
+        BlocProvider(
+          create: (context) {
+            return AddressShowingBloc();
+          },
+        ),
+        BlocProvider(
+          create: (context) {
+            return AddressSelectingBloc();
+          },
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

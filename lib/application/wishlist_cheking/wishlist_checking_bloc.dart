@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 // import 'package:flutter/gestures.dart';
 // import 'package:head_x/application/product_list/product_list_bloc.dart';
 import 'package:head_x/application/search_bloc/search_bloc_bloc.dart';
+import 'package:head_x/firebase/cart/cart_opreation.dart';
 import 'package:head_x/firebase/recently/recently_opreation.dart';
 import 'package:head_x/presentation/categories/wireless_category/main_wireless.dart';
 import 'package:meta/meta.dart';
@@ -34,7 +35,6 @@ class WishlistCheckingBloc
       final docData = await gettingData(userId, "users");
       final wishlistProducts = docData.data()?['wishlist'] ?? [];
       List<dynamic> searchProducts = await get();
-
       return emit(WishlistCheckingState(
           valuesOfEachCategory: searchProducts,
           valuesOfWishlist: wishlistProducts,
@@ -48,6 +48,16 @@ class WishlistCheckingBloc
           recentlyProducts.data()?['wishlist'] ?? [];
       return emit(WishlistCheckingState(
           valuesOfEachCategory: recentlyAllProducts,
+          valuesOfWishlist: wishlistProducts,
+          isLoading: false));
+    });
+    on<CartWishlistChecking>((event, emit) async {
+      final docData = await gettingData(userId, 'users');
+      List<dynamic> wishlistProducts = docData.data()?['wishlist'] ?? [];
+      List<Map<String, dynamic>> cartProducts =
+          await CartOperation().get(userId);
+      return emit(WishlistCheckingState(
+          valuesOfEachCategory: cartProducts,
           valuesOfWishlist: wishlistProducts,
           isLoading: false));
     });

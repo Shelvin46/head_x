@@ -107,7 +107,7 @@ Text heading = const Text(
 SizedBox homePageGap2 = SizedBox(
   height: myMediaQueryData.size.height * 0.008,
 );
-Text recentText = const Text(
+const recentText = Text(
   "Recently Viewed",
   style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
 );
@@ -119,6 +119,10 @@ SizedBox lstviewGap = SizedBox(
 );
 Text trendingText = const Text(
   "Trending Products",
+  style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+);
+const allText = Text(
+  "All Products",
   style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
 );
 // <-------------------------------------------------------------------MainHome---------------------------------------------------------------------------------------------------------------->

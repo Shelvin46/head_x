@@ -23,14 +23,11 @@ class MainHome extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      BlocProvider.of<CountofCartBloc>(context).add(InitializeCount());
-      BlocProvider.of<RecentlyProductsBloc>(context).add(InitialRecently());
-      BlocProvider.of<ProductListBloc>(context).add(RecentlyDetails());
-      BlocProvider.of<WishlistCheckingBloc>(context).add(RecentlyWishlist());
-    });
+    BlocProvider.of<CountofCartBloc>(context).add(InitializeCount());
+    BlocProvider.of<RecentlyProductsBloc>(context).add(InitialRecently());
+    BlocProvider.of<ProductListBloc>(context).add(RecentlyDetails());
+    BlocProvider.of<WishlistCheckingBloc>(context).add(RecentlyWishlist());
 
-    // log(userId);
     return Scaffold(
       body: SafeArea(
           child: SingleChildScrollView(
@@ -67,6 +64,7 @@ class MainHome extends StatelessWidget {
                           return const MainSearch();
                         },
                       ));
+                      // BlocProvider.of<ProductListBloc>(context).add(RecentlyDetails());
                       BlocProvider.of<SearchBlocBloc>(context)
                           .add(InitialSearch());
                     },
@@ -141,6 +139,11 @@ class MainHome extends StatelessWidget {
                                   id: eachProduct['id'], index: index);
                             },
                           ));
+                          BlocProvider.of<ProductListBloc>(context)
+                              .add(RecentlyDetails());
+
+                          BlocProvider.of<WishlistCheckingBloc>(context)
+                              .add(RecentlyWishlist());
                         },
                         child: Container(
                           decoration: BoxDecoration(
@@ -241,6 +244,151 @@ class MainHome extends StatelessWidget {
                 },
               ),
             ),
+            homePageGap2,
+            Padding(
+              padding:
+                  EdgeInsets.only(left: myMediaQueryData.size.width * 0.04),
+              child: allText,
+            ),
+            homePageGap2,
+            Column(
+              children: [
+                BlocBuilder<SearchBlocBloc, SearchBlocState>(
+                  builder: (context, state) {
+                    return Padding(
+                      padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                      child: GridView.builder(
+                        shrinkWrap: true,
+                        physics: const ScrollPhysics(),
+                        itemCount: state.values.length,
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          mainAxisSpacing: 30.0,
+                          crossAxisSpacing: 10.0,
+                          mainAxisExtent: 250,
+                        ),
+                        itemBuilder: (BuildContext context, int index) {
+                          final eachProduct = state.values[index];
+                          return InkWell(
+                            onTap: () async {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) {
+                                  return MainProductDetails(
+                                      id: eachProduct['id'], index: index);
+                                },
+                              ));
+                              BlocProvider.of<ProductListBloc>(context)
+                                  .add(SearchIntoDetails());
+
+                              BlocProvider.of<WishlistCheckingBloc>(context)
+                                  .add(SearchWishlist());
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  color:
+                                      const Color.fromARGB(255, 242, 240, 240),
+                                  borderRadius: BorderRadius.circular(10)),
+                              child: Column(
+                                children: [
+                                  SizedBox(
+                                      height:
+                                          myMediaQueryData.size.height * 0.03),
+                                  // Row(
+                                  //   mainAxisAlignment:
+                                  //       MainAxisAlignment.spaceBetween,
+                                  //   children: [
+                                  //     Container(
+                                  //       width: myMediaQueryData.size.width * 0.1,
+                                  //       height:
+                                  //           myMediaQueryData.size.height * 0.02,
+                                  //       color: ratingColor,
+                                  //       child: Row(
+                                  //         children: [
+                                  //           Padding(
+                                  //             padding: cartPadding,
+                                  //             child: Text(
+                                  //               "4.0",
+                                  //               style: ratingStyle,
+                                  //             ),
+                                  //           ),
+                                  //           const Spacer(),
+                                  //           starIcon,
+                                  //         ],
+                                  //       ),
+                                  //     ),
+                                  //     InkWell(
+                                  //       onTap: () async {
+                                  //         await WishlistOpreations()
+                                  //             .wishlistUpdate(
+                                  //                 state.productList[index],
+                                  //                 userId);
+                                  //       },
+                                  //       child: const Icon(
+                                  //         Icons.favorite,
+                                  //         color: Colors.blue,
+                                  //         size: 34,
+                                  //       ),
+                                  //     )
+                                  //   ],
+                                  // ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Container(
+                                        height: 140,
+                                        width: 130,         
+                                        // color: Colors.amber,
+                                        decoration: BoxDecoration(
+                                            image: DecorationImage(
+                                                fit: BoxFit.fill,
+                                                image: NetworkImage(
+                                                    eachProduct['images'][0]))),
+                                      )
+                                    ],
+                                  ),
+                                  cartGap2,
+                                  Row(
+                                    children: [
+                                      SizedBox(
+                                        width:
+                                            myMediaQueryData.size.width * 0.01,
+                                      ),
+                                      Text.rich(
+                                        TextSpan(
+                                          text: '\u20B9',
+                                          style: const TextStyle(
+                                              fontSize: 24,
+                                              color: Colors.black),
+                                          children: <TextSpan>[
+                                            TextSpan(
+                                              text: eachProduct['price']
+                                                  .toString(), // Price value
+                                              style: const TextStyle(
+                                                  fontSize: 24,
+                                                  color: Colors.black),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      const Spacer(),
+                                    ],
+                                  ),
+                                  Text(
+                                    eachProduct['name'],
+                                    style: productName,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    );
+                  },
+                )
+              ],
+            )
           ],
         ),
       )),

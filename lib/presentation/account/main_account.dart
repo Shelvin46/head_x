@@ -17,6 +17,8 @@ import 'package:head_x/presentation/profile/edit_profile/edit_profile_one.dart';
 import 'package:head_x/presentation/widgets/app_bar_widget.dart';
 import 'package:head_x/presentation/wishlist/main_wishlist.dart';
 
+import '../../application/address_showing/address_showing_bloc.dart';
+
 class MainAccount extends StatelessWidget {
   const MainAccount({super.key});
 
@@ -178,6 +180,8 @@ class MainAccount extends StatelessWidget {
                             return MainAddresses();
                           },
                         ));
+                        BlocProvider.of<AddressShowingBloc>(context)
+                            .add(InitializeAddress());
                       },
                       child: AccountDetails(
                           icon: Icons.location_on_outlined,

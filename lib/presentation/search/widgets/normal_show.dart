@@ -19,10 +19,8 @@ class NormalShow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      BlocProvider.of<ProductListBloc>(context).add(SearchIntoDetails());
-    });
-
+    BlocProvider.of<ProductListBloc>(context).add(SearchIntoDetails());
+    BlocProvider.of<WishlistCheckingBloc>(context).add(SearchWishlist());
     return Padding(
         padding: const EdgeInsets.all(8.0),
         child: BlocBuilder<SearchBlocBloc, SearchBlocState>(
@@ -54,7 +52,6 @@ class NormalShow extends StatelessWidget {
                 itemBuilder: (context, index) {
                   // log(index.toString());
                   final product = state.searchedProducts[index];
-
                   return InkWell(
                     onTap: () {
                       Navigator.of(context).push(MaterialPageRoute(
@@ -65,6 +62,8 @@ class NormalShow extends StatelessWidget {
                                   .indexOf(state.searchedProducts[index]));
                         },
                       ));
+                      BlocProvider.of<ProductListBloc>(context)
+                          .add(SearchIntoDetails());
                       BlocProvider.of<WishlistCheckingBloc>(context)
                           .add(SearchWishlist());
 

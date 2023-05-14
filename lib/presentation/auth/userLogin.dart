@@ -156,7 +156,7 @@ class _UserLoginState extends State<UserLogin> {
             height: 20,
           ),
           InkWell(
-            onTap: () async {
+            onTap: () async {     
               await FiireBaseGoogle().signInWithGoogle();
               // ignore: use_build_context_synchronously
               Navigator.push(context, MaterialPageRoute(

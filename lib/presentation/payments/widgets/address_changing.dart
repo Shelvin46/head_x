@@ -1,6 +1,7 @@
 // import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:head_x/core/uiConstWidget.dart';
+import 'package:head_x/presentation/profile/addresses/widgets/select_address.dart';
 
 class AdressChanging extends StatelessWidget {
   const AdressChanging({
@@ -14,7 +15,13 @@ class AdressChanging extends StatelessWidget {
       children: [
         Text("Deliver to", style: addressName),
         TextButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) {
+                return   AddressSelecting();
+              },
+            ));
+          },
           child: const Text(
             "Change To",
             style: TextStyle(fontSize: 20),

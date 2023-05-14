@@ -241,13 +241,7 @@ class MainOrderSummary extends StatelessWidget {
               height: 10,
             ),
             InkWell(
-              onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) {
-                    return PaymentOne();
-                  },
-                ));
-              },
+              onTap: () {},
               child: Container(
                 height: myMediaQueryData.size.height * 0.06,
                 width: myMediaQueryData.size.width * 0.5,

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:head_x/presentation/order_details/main_order_details.dart';
-import 'package:head_x/presentation/product_details/product_details.dart';
+// import 'package:head_x/presentation/product_details/product_details.dart';
 import 'package:head_x/presentation/widgets/app_bar_widget.dart';
 
 import '../../core/uiConstWidget.dart';

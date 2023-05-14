@@ -10,9 +10,13 @@ class RecentlyOpreation {
     final CollectionReference userCollection = firestore.collection('users');
     final DocumentSnapshot userDoc = await userCollection.doc(userId).get();
     if (!userDoc.exists) {
-      await userCollection
-          .doc(userId)
-          .set({'wishlist': [], 'cart': [], 'recently': []});
+      await userCollection.doc(userId).set({
+        'wishlist': [],
+        'cart': [],
+        'recently': [],
+        'address': [],
+        'orders': []
+      });
     }
     try {
       final docData = await FirebaseFirestore.instance
@@ -37,7 +41,6 @@ class RecentlyOpreation {
       log('Error adding item to recently: $e');
     }
   }
-  
 
   Future<List<Map<String, dynamic>>> recentlyGet() async {
     final docData =
@@ -48,7 +51,7 @@ class RecentlyOpreation {
       final name = products['name'];
       final id = products['id'];
       final docDataMain =
-                          await FirebaseFirestore.instance.collection('category').doc(id).get();
+          await FirebaseFirestore.instance.collection('category').doc(id).get();
       for (var mainProduct in docDataMain.data()?['product'] ?? []) {
         if (mainProduct['name'] == name) {
           recentlyProducts.add(mainProduct);

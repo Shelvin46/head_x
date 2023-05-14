@@ -5,11 +5,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:head_x/application/search_bloc/search_bloc_bloc.dart';
 // import 'package:head_x/application/search_bloc/search_bloc_bloc.dart';
 import 'package:head_x/application/wishlist_listing/wishlist_listing_bloc.dart';
-
+import 'package:head_x/firebase/cart/cart_opreation.dart';
+import 'package:head_x/presentation/categories/wireless_category/main_wireless.dart';
 import 'package:meta/meta.dart';
-
 import '../../firebase/recently/recently_opreation.dart';
-
 part 'product_list_event.dart';
 part 'product_list_state.dart';
 
@@ -38,6 +37,11 @@ class ProductListBloc extends Bloc<ProductListEvent, ProductListState> {
           await RecentlyOpreation().recentlyGet();
       return emit(
           ProductListState(productList: recentlyProducts, isLoading: false));
+    });
+    on<CartDetails>((event, emit) async {
+      List<dynamic> cartProducts = await CartOperation().get(userId);
+      return emit(
+          ProductListState(productList: cartProducts, isLoading: false));
     });
   }
 }

@@ -11,9 +11,13 @@ class WishlistOpreations {
     final CollectionReference userCollection = firestore.collection('users');
     final DocumentSnapshot userDoc = await userCollection.doc(userId).get();
     if (!userDoc.exists) {
-      await userCollection
-          .doc(userId)
-          .set({'wishlist': [], 'cart': [], 'recently': []});
+      await userCollection.doc(userId).set({
+        'wishlist': [],
+        'cart': [],
+        'recently': [],
+        'address': [],
+        'orders': []
+      });
     }
 
     try {

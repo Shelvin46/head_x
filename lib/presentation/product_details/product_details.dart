@@ -3,22 +3,25 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:head_x/application/address_showing/address_showing_bloc.dart';
 import 'package:head_x/application/countof_cart/countof_cart_bloc.dart';
 import 'package:head_x/application/indicator_bloc/indicator_bloc_bloc.dart';
+import 'package:head_x/application/order_summary/order_summary_bloc.dart';
 import 'package:head_x/application/product_list/product_list_bloc.dart';
 import 'package:head_x/core/uiConstWidget.dart';
 import 'package:head_x/core/uiConstant.dart';
+// import 'package:head_x/firebase/address/add_address.dart';
 import 'package:head_x/firebase/cart/cart_opreation.dart';
 // import 'package:head_x/firebase/wishlist/wishlist_opreation.dart';
 import 'package:head_x/main.dart';
 import 'package:head_x/presentation/categories/wireless_category/main_wireless.dart';
+import 'package:head_x/presentation/payments/cart_payment.dart';
 // import 'package:head_x/presentation/order_details/order_summary.dart';
 import 'package:head_x/presentation/product_details/widgets/specifications.dart';
 import 'package:head_x/presentation/widgets/app_bar_widget.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import '../../application/cart_showing/cart_showing_bloc.dart';
 import '../wishlist/widgets/favourite_icon.dart';
-
 
 int length = 0;
 int countOfProduct = 1;
@@ -34,7 +37,9 @@ class MainProductDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // log
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      BlocProvider.of<AddressShowingBloc>(context).add(InitializeAddress());
+    });
     return Scaffold(
       bottomSheet: BlocBuilder<ProductListBloc, ProductListState>(
         builder: (context, state) {
@@ -45,7 +50,6 @@ class MainProductDetails extends StatelessWidget {
             children: [
               InkWell(
                 onTap: () async {
-
                   showDialog(
                       context: context,
                       builder: (BuildContext context) {
@@ -76,24 +80,61 @@ class MainProductDetails extends StatelessWidget {
                   )),
                 ),
               ),
-              InkWell(
-                onTap: () {},
-                child: Container(
-                  width: myMediaQueryData.size.width * 0.5,
-                  height: 50,
-                  decoration: const BoxDecoration(
-                    color: Colors.blue,
-                  ),
-                  child: const Center(
-                      child: Text(
-                    "Buy Now",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 25,
-                      color: Colors.white,
+              BlocBuilder<AddressShowingBloc, AddressShowingState>(
+                builder: (context, state) {
+                  int index = 0;
+                  String name = "";
+                  String remaining = "";
+                  final forAddress = state.addresses[index];
+                  if (state.addresses.isNotEmpty && index == 0) {
+                    name = forAddress['name'];
+                    remaining = '${forAddress['addressLine1']}'
+                        '\n'
+                        '${forAddress['addressLine2']}'
+                        '\n'
+                        '${forAddress['city']}${forAddress['state']}- ${forAddress['zipcode']}';
+                  }
+                  return InkWell(
+                    onTap: () async {
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        },
+                      );
+                      List<Map<String, dynamic>> checkoutData = [];
+                      List<Map<String, dynamic>> intoCheckout =
+                          await checkout(checkoutData, data);
+                      BlocProvider.of<OrderSummaryBloc>(context)
+                          .add(EachProductCheckout(eachProduct: intoCheckout));
+                      Navigator.pop(context);
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) {
+                          return CartCheckout(name: name, remaining: remaining);
+                        },
+                      ));
+                      // Navigator.pop(context);/
+                    },
+                    child: Container(
+                      width: myMediaQueryData.size.width * 0.5,
+                      height: 50,
+                      decoration: const BoxDecoration(
+                        color: Colors.blue,
+                      ),
+                      child: const Center(
+                          child: Text(
+                        "Buy Now",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 25,
+                          color: Colors.white,
+                        ),
+                      )),
                     ),
-                  )),
-                ),
+                  );
+                },
               )
             ],
           );
@@ -322,5 +363,11 @@ class MainProductDetails extends StatelessWidget {
             activeIndex: state.activeIndex, count: length);
       },
     );
+  }
+
+  Future<List<Map<String, dynamic>>> checkout(
+      List<Map<String, dynamic>> checkoutData, dynamic data) async {
+    checkoutData.add(data);
+    return checkoutData;
   }
 }
