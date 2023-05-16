@@ -1,6 +1,7 @@
 // import 'dart:ui';
 // ignore_for_file: use_build_context_synchronously
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:head_x/application/cart_showing/cart_showing_bloc.dart';
@@ -11,6 +12,7 @@ import 'package:head_x/core/uiConstWidget.dart';
 import 'package:head_x/core/uiConstant.dart';
 import 'package:head_x/firebase/cart/cart_opreation.dart';
 import 'package:head_x/main.dart';
+import 'package:head_x/presentation/categories/wireless_category/main_wireless.dart';
 import 'package:head_x/presentation/payments/cart_payment.dart';
 import 'package:head_x/presentation/product_details/product_details.dart';
 import 'package:head_x/presentation/widgets/app_bar_widget.dart';
@@ -241,17 +243,31 @@ class MainCart extends StatelessWidget {
                 }
 
                 return InkWell(
-                  onTap: () {
+                  onTap: () async {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      },
+                    );
+                    final docData = await FirebaseFirestore.instance
+                        .collection('users')
+                        .doc(userId)
+                        .get();
+
                     BlocProvider.of<OrderSummaryBloc>(context)
                         .add(CartCheckoutInitialize());
-                    // BlocProvider.of<AddressShowingBloc>(context)
-                    //     .add(InitializeAddress());
+                    Navigator.pop(context);
 
                     Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) {
                         return CartCheckout(
                           name: name,
                           remaining: remaining,
+                          checking: "fromCart",
+                          cartProducts: docData.data()?['cart'] ?? [],
                         );
                       },
                     ));

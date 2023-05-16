@@ -1,29 +1,46 @@
 // import 'dart:math';
 
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:developer';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:head_x/application/address_selecting/address_selecting_bloc.dart';
+import 'package:head_x/application/cart_showing/cart_showing_bloc.dart';
 import 'package:head_x/application/order_summary/order_summary_bloc.dart';
 import 'package:head_x/core/uiConstant.dart';
+import 'package:head_x/firebase/orders/orders_listing.dart';
 import 'package:head_x/main.dart';
+import 'package:head_x/presentation/categories/wireless_category/main_wireless.dart';
 // import 'package:head_x/presentation/payments/payment_screen.dart';
 import 'package:head_x/presentation/payments/widgets/address_changing.dart';
 import 'package:head_x/presentation/widgets/app_bar_widget.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import '../../core/uiConstWidget.dart';
 
+dynamic name = "";
+dynamic address = "";
+
 class CartCheckout extends StatefulWidget {
-  const CartCheckout({super.key, required this.name, required this.remaining});
+  const CartCheckout(
+      {super.key,
+      required this.name,
+      required this.remaining,
+      required this.checking,
+      required this.cartProducts});
   final String name;
   final String remaining;
+  final String checking;
+  final List<dynamic> cartProducts;
   @override
   State<CartCheckout> createState() => _CartCheckoutState();
 }
 
 class _CartCheckoutState extends State<CartCheckout> {
   final _razorpay = Razorpay();
+  List<dynamic> payProducts = [];
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
@@ -38,13 +55,14 @@ class _CartCheckoutState extends State<CartCheckout> {
   void dispose() {
     super.dispose();
     _razorpay.clear();
+    payProducts.clear();
   }
 
-  void makePayment() async {
+  void makePayment(int amount) async {
     // var amount = widget.buynow ? buyNowTotals : total ?? 0;
     var options = {
       'key': 'rzp_test_3LZeDnsfAcnqSf',
-      'amount': 100,
+      'amount': amount * 100,
       'name': 'Head - X',
       'description': 'iPhone 14',
       'prefill': {'contact': '12345678', 'email': 'admin@gmail.com'}
@@ -57,20 +75,44 @@ class _CartCheckoutState extends State<CartCheckout> {
     }
   }
 
-  List<Map<String, dynamic>> payProducts = [];
-
-  void _handlePaymentSuccess(PaymentSuccessResponse response) {
+  void _handlePaymentSuccess(PaymentSuccessResponse response) async {
     log("PAyment");
-    showDialog(
-      context: context,
-      builder: (context) {
-        return const Center(
-          child: CircularProgressIndicator.adaptive(),
-        );
-      },
-    );
+    if (widget.checking == "fromCart") {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return const Center(
+            child: CircularProgressIndicator.adaptive(),
+          );
+        },
+      );
+      FirebaseFirestore.instance.collection('users').doc(userId).get();
+      log(payProducts.toString());
 
-    // log()
+      await OrdersListing().ordersAdding(payProducts);
+      final docData = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .get();
+      final List<dynamic> cardList = docData.data()?['cart'] ?? [];
+      if (cardList != []) {
+        cardList.clear();
+      }
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .update({'cart': cardList});
+      BlocProvider.of<OrderSummaryBloc>(context).add(CartCheckoutInitialize());
+      BlocProvider.of<CartShowingBloc>(context).add(CartgShowing());
+
+      Navigator.pop(context); // log()
+    } else if (widget.checking == 'normal') {
+      log(payProducts.toString());
+      await OrdersListing().ordersAdding(payProducts);
+      BlocProvider.of<OrderSummaryBloc>(context)
+          .add(EachProductCheckout(eachProduct: []));
+    }
+
     //the product present in the ordersumary bloc it will added into the a list
     // then compare that product present in the order bloc summary emitting list it is present then delete that product.
     //then call the event of ordersummary bloc.
@@ -85,7 +127,25 @@ class _CartCheckoutState extends State<CartCheckout> {
     return Scaffold(
       bottomSheet: BlocBuilder<OrderSummaryBloc, OrderSummaryState>(
         builder: (context, state) {
-          payProducts.addAll(state.products);
+          if (widget.checking == "fromCart") {
+            for (var product in state.products) {
+              for (var cardProduct in widget.cartProducts) {
+                if (product['name'] == cardProduct['name']) {
+                  product.addAll({'count': cardProduct['count']});
+                }
+              }
+            }
+            for (var product in state.products) {
+              product.addAll({'addressName': name, 'remaining': address});
+            }
+            payProducts = state.products;
+            log(payProducts.toString());
+          } else if (widget.checking == 'normal') {
+            for (var product in state.products) {
+              product.addAll({'addressName': name, 'remaining': address});
+            }
+            payProducts = state.products;
+          }
           dynamic total = 0;
           for (var product in state.products) {
             total = total + product['price'];
@@ -105,8 +165,7 @@ class _CartCheckoutState extends State<CartCheckout> {
                     ),
                     ElevatedButton(
                         onPressed: () {
-                          makePayment();
-                          log(payProducts.toString());
+                          makePayment(total);
                         },
                         child: const Text('Place Order'))
                   ],
@@ -135,12 +194,20 @@ class _CartCheckoutState extends State<CartCheckout> {
                   ),
                   BlocBuilder<AddressSelectingBloc, AddressSelectingState>(
                     builder: (context, state) {
+                      log(name.toString());
+                      log(address.toString());
                       if (state.addressLine1.isNotEmpty &&
                           state.addressLine2.isNotEmpty &&
                           state.name.isNotEmpty &&
                           state.city.isNotEmpty &&
                           state.code.isNotEmpty &&
                           state.state.isNotEmpty) {
+                        name = state.name;
+                        address = '${state.addressLine1}'
+                            '\n'
+                            '${state.addressLine2}'
+                            '\n'
+                            '${state.city}${state.state}- ${state.code}';
                         return Column(
                           children: [
                             Padding(
@@ -169,6 +236,8 @@ class _CartCheckoutState extends State<CartCheckout> {
                           ],
                         );
                       }
+                      name = widget.name;
+                      address = widget.remaining;
                       return Column(children: [
                         Padding(
                           padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
@@ -208,6 +277,8 @@ class _CartCheckoutState extends State<CartCheckout> {
                   );
                 }
                 return ListView.separated(
+                    // physics: ClampingScrollPhysics(),
+                    scrollDirection: Axis.vertical,
                     itemBuilder: (context, index) {
                       final data = state.products[index];
                       return Container(
@@ -262,8 +333,15 @@ class _CartCheckoutState extends State<CartCheckout> {
               },
             ),
           ),
+          SizedBox(
+            height: myMediaQueryData.size.height * 0.05,
+          )
         ],
       ),
     );
   }
 }
+
+// Future<void> deletingCard() async {
+ 
+// }

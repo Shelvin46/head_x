@@ -295,7 +295,7 @@ TextStyle addressName = const TextStyle(
 //<--------------------------------------------------------------------------Addresses---------------------------------------------------------------------------------------------------------------------------------------------->
 TextStyle cartPaymentName = const TextStyle(
   fontWeight: FontWeight.bold,
-  fontSize: 15,
+  fontSize: 19,
 );
 // TextStyle cartPriceStyle=
 TextStyle cartPriceStyle =

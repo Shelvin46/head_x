@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:head_x/application/address_showing/address_showing_bloc.dart';
@@ -104,6 +105,10 @@ class MainProductDetails extends StatelessWidget {
                           );
                         },
                       );
+                      // final docData = await FirebaseFirestore.instance
+                      //     .collection('users')
+                      //     .doc(userId)
+                      //     .get();
                       List<Map<String, dynamic>> checkoutData = [];
                       List<Map<String, dynamic>> intoCheckout =
                           await checkout(checkoutData, data);
@@ -112,10 +117,14 @@ class MainProductDetails extends StatelessWidget {
                       Navigator.pop(context);
                       Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) {
-                          return CartCheckout(name: name, remaining: remaining);
+                          return CartCheckout(
+                            name: name,
+                            remaining: remaining,
+                            checking: "normal",
+                            cartProducts: [],
+                          );
                         },
                       ));
-                      // Navigator.pop(context);/
                     },
                     child: Container(
                       width: myMediaQueryData.size.width * 0.5,

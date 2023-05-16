@@ -27,7 +27,8 @@ class OrderSummaryBloc extends Bloc<OrderSummaryEvent, OrderSummaryState> {
     });
     on<EachProductCheckout>((event, emit) {
       return emit(
-          OrderSummaryState(isLoading: false, products: event.eachProduct));
+          OrderSummaryState(isLoading: false, products: event.eachProduct
+          ));
     });
   }
 }
