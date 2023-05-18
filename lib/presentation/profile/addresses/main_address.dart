@@ -1,14 +1,16 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:head_x/application/address_showing/address_showing_bloc.dart';
-// import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:head_x/application/wishlist_cheking/wishlist_checking_bloc.dart';
 import 'package:head_x/core/uiConstWidget.dart';
 import 'package:head_x/core/uiConstant.dart';
 import 'package:head_x/main.dart';
+import 'package:head_x/presentation/home/main_home.dart';
 import 'package:head_x/presentation/profile/addresses/widgets/adding_address.dart';
 import 'package:head_x/presentation/widgets/app_bar_widget.dart';
-
-
 
 class MainAddresses extends StatelessWidget {
   const MainAddresses({super.key});
@@ -41,8 +43,8 @@ class MainAddresses extends StatelessWidget {
                     itemBuilder: (context, index) {
                       final data = state.addresses[index];
                       final forAddress = state.addresses[0];
-                    
-                      // remaining = 
+
+                      // remaining =
                       return Container(
                         width: double.infinity,
                         height: myMediaQueryData.size.height * 0.170,
@@ -56,9 +58,52 @@ class MainAddresses extends StatelessWidget {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(data['name'], style: addressName),
-                                  const Icon(
-                                    Icons.more_vert,
-                                    size: 30,
+                                  InkWell(
+                                    onTap: () {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return AlertDialog(
+                                            title: const Text('Delete Address'),
+                                            content: const Text(
+                                                'Are you sure you want to delete this address?'),
+                                            actions: [
+                                              TextButton(
+                                                child: const Text('Cancel'),
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                }, 
+                                              ),
+                                              ElevatedButton(
+                                                child: const Text('Delete'),
+                                                onPressed: () async {
+                                                  showDialog(
+                                                    context: context,
+                                                    builder: (context) {
+                                                      return const Center(
+                                                        child:
+                                                            CircularProgressIndicator(),
+                                                      );
+                                                    },
+                                                  );
+                                                  await toDelete(index);
+                                                  BlocProvider.of<
+                                                              AddressShowingBloc>(
+                                                          context)
+                                                      .add(InitializeAddress());
+                                                  Navigator.of(context).pop();
+                                                  Navigator.of(context).pop();
+                                                },
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
+                                    },
+                                    child: const Icon(
+                                      Icons.more_vert,
+                                      size: 30,//198
+                                    ),
                                   )
                                 ],
                               ),
@@ -106,4 +151,14 @@ class MainAddresses extends StatelessWidget {
       ),
     );
   }
+}
+
+Future<void> toDelete(int index) async {
+  final docData = await gettingData(userId, 'users');
+  List<dynamic> addresses = docData.data()?['address'] ?? [];
+  addresses.removeAt(index);
+  await FirebaseFirestore.instance
+      .collection('users')
+      .doc(userId)
+      .update({'address': addresses});
 }

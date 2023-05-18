@@ -8,6 +8,7 @@ import 'package:head_x/application/product_list/product_list_bloc.dart';
 import 'package:head_x/application/search_bloc/search_bloc_bloc.dart';
 // import 'package:head_x/presentation/categories/wireless_category/main_wireless.dart';
 import 'package:head_x/presentation/product_details/product_details.dart';
+import 'package:head_x/presentation/splash_screen/splash_screen.dart';
 import '../../../application/wishlist_cheking/wishlist_checking_bloc.dart';
 import '../../../core/uiConstWidget.dart';
 import '../../../main.dart';
@@ -20,7 +21,8 @@ class NormalShow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     BlocProvider.of<ProductListBloc>(context).add(SearchIntoDetails());
-    BlocProvider.of<WishlistCheckingBloc>(context).add(SearchWishlist());
+    BlocProvider.of<WishlistCheckingBloc>(context)
+        .add(SearchWishlist(wishlistProducts: wishlistAllProducts));
     return Padding(
         padding: const EdgeInsets.all(8.0),
         child: BlocBuilder<SearchBlocBloc, SearchBlocState>(
@@ -57,15 +59,18 @@ class NormalShow extends StatelessWidget {
                       Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) {
                           return MainProductDetails(
-                              id: product['id'],
-                              index: state.values
-                                  .indexOf(state.searchedProducts[index]));
+                            id: product['id'],
+                            index: state.values
+                                .indexOf(state.searchedProducts[index]),
+                            checking: 'normal',
+                          );
                         },
                       ));
                       BlocProvider.of<ProductListBloc>(context)
                           .add(SearchIntoDetails());
-                      BlocProvider.of<WishlistCheckingBloc>(context)
-                          .add(SearchWishlist());
+                      BlocProvider.of<WishlistCheckingBloc>(context).add(
+                          SearchWishlist(
+                              wishlistProducts: wishlistAllProducts));
 
                       log(product['id'].toString());
                     },
@@ -179,11 +184,14 @@ class NormalShow extends StatelessWidget {
                     Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) {
                         return MainProductDetails(
-                            id: product['id'], index: index);
+                          id: product['id'],
+                          index: index,
+                          checking: 'normal',
+                        );
                       },
                     ));
-                    BlocProvider.of<WishlistCheckingBloc>(context)
-                        .add(SearchWishlist());
+                    BlocProvider.of<WishlistCheckingBloc>(context).add(
+                        SearchWishlist(wishlistProducts: wishlistAllProducts));
 
                     log(product['id'].toString());
                   },

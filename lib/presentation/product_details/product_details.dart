@@ -1,10 +1,11 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+// import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:head_x/application/address_showing/address_showing_bloc.dart';
+// import 'package:head_x/application/address_showing/address_showing_bloc.dart';
 import 'package:head_x/application/countof_cart/countof_cart_bloc.dart';
 import 'package:head_x/application/indicator_bloc/indicator_bloc_bloc.dart';
 import 'package:head_x/application/order_summary/order_summary_bloc.dart';
@@ -16,9 +17,11 @@ import 'package:head_x/firebase/cart/cart_opreation.dart';
 // import 'package:head_x/firebase/wishlist/wishlist_opreation.dart';
 import 'package:head_x/main.dart';
 import 'package:head_x/presentation/categories/wireless_category/main_wireless.dart';
-import 'package:head_x/presentation/payments/cart_payment.dart';
+import 'package:head_x/presentation/home/main_home.dart';
+// import 'package:head_x/presentation/payments/cart_payment.dart';
 // import 'package:head_x/presentation/order_details/order_summary.dart';
 import 'package:head_x/presentation/product_details/widgets/specifications.dart';
+import 'package:head_x/presentation/profile/addresses/widgets/select_address.dart';
 import 'package:head_x/presentation/widgets/app_bar_widget.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import '../../application/cart_showing/cart_showing_bloc.dart';
@@ -28,19 +31,17 @@ int length = 0;
 int countOfProduct = 1;
 
 class MainProductDetails extends StatelessWidget {
-  const MainProductDetails({
-    super.key,
-    required this.id,
-    required this.index,
-  });
+  const MainProductDetails(
+      {super.key,
+      required this.id,
+      required this.index,
+      required this.checking});
   final int index;
   final String id;
+  final String checking;
 
   @override
   Widget build(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      BlocProvider.of<AddressShowingBloc>(context).add(InitializeAddress());
-    });
     return Scaffold(
       bottomSheet: BlocBuilder<ProductListBloc, ProductListState>(
         builder: (context, state) {
@@ -81,69 +82,45 @@ class MainProductDetails extends StatelessWidget {
                   )),
                 ),
               ),
-              BlocBuilder<AddressShowingBloc, AddressShowingState>(
-                builder: (context, state) {
-                  int index = 0;
-                  String name = "";
-                  String remaining = "";
-                  final forAddress = state.addresses[index];
-                  if (state.addresses.isNotEmpty && index == 0) {
-                    name = forAddress['name'];
-                    remaining = '${forAddress['addressLine1']}'
-                        '\n'
-                        '${forAddress['addressLine2']}'
-                        '\n'
-                        '${forAddress['city']}${forAddress['state']}- ${forAddress['zipcode']}';
-                  }
-                  return InkWell(
-                    onTap: () async {
-                      showDialog(
-                        context: context,
-                        builder: (context) {
-                          return const Center(
-                            child: CircularProgressIndicator(),
-                          );
-                        },
+              InkWell(
+                onTap: () async {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
                       );
-                      // final docData = await FirebaseFirestore.instance
-                      //     .collection('users')
-                      //     .doc(userId)
-                      //     .get();
-                      List<Map<String, dynamic>> checkoutData = [];
-                      List<Map<String, dynamic>> intoCheckout =
-                          await checkout(checkoutData, data);
-                      BlocProvider.of<OrderSummaryBloc>(context)
-                          .add(EachProductCheckout(eachProduct: intoCheckout));
-                      Navigator.pop(context);
-                      Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) {
-                          return CartCheckout(
-                            name: name,
-                            remaining: remaining,
-                            checking: "normal",
-                            cartProducts: [],
-                          );
-                        },
-                      ));
                     },
-                    child: Container(
-                      width: myMediaQueryData.size.width * 0.5,
-                      height: 50,
-                      decoration: const BoxDecoration(
-                        color: Colors.blue,
-                      ),
-                      child: const Center(
-                          child: Text(
-                        "Buy Now",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 25,
-                          color: Colors.white,
-                        ),
-                      )),
-                    ),
                   );
+                  List<Map<String, dynamic>> checkoutData = [];
+                  List<Map<String, dynamic>> intoCheckout =
+                      await checkout(checkoutData, data);
+                  Navigator.pop(context);
+                  BlocProvider.of<AddressShowingBloc>(context)
+                      .add(InitializeAddress());
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) {
+                      return AddressSelecting(
+                          checking: 'normal', eachProduct: intoCheckout);
+                    },
+                  ));
                 },
+                child: Container(
+                  width: myMediaQueryData.size.width * 0.5,
+                  height: 50,
+                  decoration: const BoxDecoration(
+                    color: Colors.blue,
+                  ),
+                  child: const Center(
+                      child: Text(
+                    "Buy Now",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 25,
+                      color: Colors.white,
+                    ),
+                  )),
+                ),
               )
             ],
           );
@@ -174,6 +151,7 @@ class MainProductDetails extends StatelessWidget {
                       index: index,
                       userId: userId,
                       idOfAllproduct: id,
+                      checking: checking,
                     ),
                     BlocBuilder<ProductListBloc, ProductListState>(
                       builder: (context, state) {
@@ -296,35 +274,6 @@ class MainProductDetails extends StatelessWidget {
                   style: productPriceStyle,
                 ),
               ),
-              // SizedBox(
-              //   height: 100,
-              //   child: Padding(
-              //     padding: const EdgeInsets.only(left: 10),
-              //     child: ListView.separated(
-              //         scrollDirection: Axis.horizontal,
-              //         itemBuilder: (context, index) {
-              //           return Column(
-              //             children: [
-              //               Expanded(
-              //                 child: Container(
-              //                   width: 50,
-              //                   height: 100,
-              //                   color: Colors.red,
-              //                 ),
-              //               ),
-              //               const SizedBox(
-              //                 height: 5,
-              //               ),
-              //               const Text("Red")
-              //             ],
-              //           );
-              //         },
-              //         separatorBuilder: (context, index) {
-              //           return const Padding(padding: EdgeInsets.all(8.0));
-              //         },
-              //         itemCount: 4),
-              //   ),
-              // ),
               productGap2,
               Padding(
                 padding:

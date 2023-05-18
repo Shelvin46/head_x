@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -7,15 +9,16 @@ import 'package:head_x/application/product_list/product_list_bloc.dart';
 import 'package:head_x/application/search_bloc/search_bloc_bloc.dart';
 import 'package:head_x/core/uiConstant.dart';
 import 'package:head_x/firebase/recently/recently_opreation.dart';
+import 'package:head_x/presentation/home/main_home.dart';
 import 'package:head_x/presentation/product_details/product_details.dart';
 import 'package:head_x/presentation/widgets/app_bar_widget.dart';
 // import '../../../application/recently_products/recently_products_bloc.dart';
+import '../../../application/recently_products/recently_products_bloc.dart';
 import '../../../application/wishlist_cheking/wishlist_checking_bloc.dart';
 import '../../../core/uiConstWidget.dart';
 import '../../../main.dart';
 
 List<dynamic> fromAll = [];
-final String userId = FirebaseAuth.instance.currentUser!.email.toString();
 
 class MainWirelessHeadphones extends StatelessWidget {
   const MainWirelessHeadphones(
@@ -67,17 +70,29 @@ class MainWirelessHeadphones extends StatelessWidget {
                         final product = state.productList[index];
                         return InkWell(
                           onTap: () async {
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return const Center(
+                                  child: CircularProgressIndicator(),
+                                );
+                              },
+                            );
+
+                            await RecentlyOpreation().recentlyAdding(product);
+
+                            Navigator.pop(context);
                             Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) {
                                 return MainProductDetails(
                                   id: id,
                                   index: index,
+                                  checking: "fromCategory",
                                 );
                               },
                             ));
+
                             // log(product.toString());
-                            await RecentlyOpreation().recentlyAdding(product);
-                            
                           },
                           child: Container(
                             color: Colors.white,
@@ -86,44 +101,6 @@ class MainWirelessHeadphones extends StatelessWidget {
                                 SizedBox(
                                     height:
                                         myMediaQueryData.size.height * 0.03),
-                                // Row(
-                                //   mainAxisAlignment:
-                                //       MainAxisAlignment.spaceBetween,
-                                //   children: [
-                                //     Container(
-                                //       width: myMediaQueryData.size.width * 0.1,
-                                //       height:
-                                //           myMediaQueryData.size.height * 0.02,
-                                //       color: ratingColor,
-                                //       child: Row(
-                                //         children: [
-                                //           Padding(
-                                //             padding: cartPadding,
-                                //             child: Text(
-                                //               "4.0",
-                                //               style: ratingStyle,
-                                //             ),
-                                //           ),
-                                //           const Spacer(),
-                                //           starIcon,
-                                //         ],
-                                //       ),
-                                //     ),
-                                //     InkWell(
-                                //       onTap: () async {
-                                //         await WishlistOpreations()
-                                //             .wishlistUpdate(
-                                //                 state.productList[index],
-                                //                 userId);
-                                //       },
-                                //       child: const Icon(
-                                //         Icons.favorite,
-                                //         color: Colors.blue,
-                                //         size: 34,
-                                //       ),
-                                //     )
-                                //   ],
-                                // ),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [

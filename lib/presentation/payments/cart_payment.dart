@@ -10,10 +10,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:head_x/application/address_selecting/address_selecting_bloc.dart';
 import 'package:head_x/application/cart_showing/cart_showing_bloc.dart';
 import 'package:head_x/application/order_summary/order_summary_bloc.dart';
+import 'package:head_x/core/bottom_nav.dart';
 import 'package:head_x/core/uiConstant.dart';
 import 'package:head_x/firebase/orders/orders_listing.dart';
 import 'package:head_x/main.dart';
 import 'package:head_x/presentation/categories/wireless_category/main_wireless.dart';
+import 'package:head_x/presentation/home/main_home.dart';
 // import 'package:head_x/presentation/payments/payment_screen.dart';
 import 'package:head_x/presentation/payments/widgets/address_changing.dart';
 import 'package:head_x/presentation/widgets/app_bar_widget.dart';
@@ -88,8 +90,7 @@ class _CartCheckoutState extends State<CartCheckout> {
       );
       FirebaseFirestore.instance.collection('users').doc(userId).get();
       log(payProducts.toString());
-
-      await OrdersListing().ordersAdding(payProducts);
+      await OrdersListing().ordersAdding(payProducts, true);
       final docData = await FirebaseFirestore.instance
           .collection('users')
           .doc(userId)
@@ -105,20 +106,38 @@ class _CartCheckoutState extends State<CartCheckout> {
       BlocProvider.of<OrderSummaryBloc>(context).add(CartCheckoutInitialize());
       BlocProvider.of<CartShowingBloc>(context).add(CartgShowing());
 
-      Navigator.pop(context); // log()
+      Navigator.pop(context);
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text("Order Successfully Completed"),
+        backgroundColor: Colors.blue,
+      ));
+      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
+        builder: (context) {
+          return BottomNav();
+        },
+      ), (route) => false);
     } else if (widget.checking == 'normal') {
-      log(payProducts.toString());
-      await OrdersListing().ordersAdding(payProducts);
+      await OrdersListing().ordersAdding(payProducts, false);
       BlocProvider.of<OrderSummaryBloc>(context)
           .add(EachProductCheckout(eachProduct: []));
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text("Order Successfully Completed"),
+        backgroundColor: Colors.blue,
+      ));
+      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
+        builder: (context) {
+          return BottomNav();
+        },
+      ), (route) => false);
     }
-
-    //the product present in the ordersumary bloc it will added into the a list
-    // then compare that product present in the order bloc summary emitting list it is present then delete that product.
-    //then call the event of ordersummary bloc.
   }
 
-  void _handlePaymentError(PaymentFailureResponse response) {}
+  void _handlePaymentError(PaymentFailureResponse response) {
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+      content: Text("Order Failed"),
+      backgroundColor: Colors.blue,
+    ));
+  }
 
   void _handleExternalWallet(ExternalWalletResponse response) {}
 

@@ -15,7 +15,10 @@ class WishlistChecking extends WishlistCheckingEvent {
   WishlistChecking({required this.values, required this.id});
 }
 
-class SearchWishlist extends WishlistCheckingEvent {}
+class SearchWishlist extends WishlistCheckingEvent {
+  List<dynamic> wishlistProducts;
+  SearchWishlist({required this.wishlistProducts});
+}
 
 class RecentlyWishlist extends WishlistCheckingEvent {}
 

@@ -300,3 +300,16 @@ TextStyle cartPaymentName = const TextStyle(
 // TextStyle cartPriceStyle=
 TextStyle cartPriceStyle =
     const TextStyle(fontWeight: FontWeight.bold, fontSize: 25);
+const forAddress = Text(
+  "+Add a Address",
+  style: TextStyle(fontSize: 24),
+);
+const detailsGap = SizedBox(
+  width: 10,
+);
+const detailsText = TextStyle(fontWeight: FontWeight.bold, fontSize: 20);
+const decoration = BoxDecoration(
+    color: Color.fromARGB(255, 211, 205, 205),
+    borderRadius: BorderRadius.all(Radius.circular(8)));
+
+const nameStyle = TextStyle(fontSize: 26, fontWeight: FontWeight.bold);

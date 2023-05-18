@@ -6,6 +6,8 @@ import 'package:head_x/application/search_bloc/search_bloc_bloc.dart';
 import 'package:head_x/firebase/cart/cart_opreation.dart';
 import 'package:head_x/firebase/recently/recently_opreation.dart';
 import 'package:head_x/presentation/categories/wireless_category/main_wireless.dart';
+import 'package:head_x/presentation/home/main_home.dart';
+import 'package:head_x/presentation/splash_screen/splash_screen.dart';
 import 'package:meta/meta.dart';
 part 'wishlist_checking_event.dart';
 part 'wishlist_checking_state.dart';
@@ -32,17 +34,13 @@ class WishlistCheckingBloc
           isLoading: false));
     });
     on<SearchWishlist>((event, emit) async {
-      final docData = await gettingData(userId, "users");
-      final wishlistProducts = docData.data()?['wishlist'] ?? [];
-      List<dynamic> searchProducts = await get();
+      // List<dynamic> searchProducts = await get();
       return emit(WishlistCheckingState(
-          valuesOfEachCategory: searchProducts,
-          valuesOfWishlist: wishlistProducts,
+          valuesOfEachCategory: productDetails,
+          valuesOfWishlist: event.wishlistProducts,
           isLoading: false));
     });
     on<RecentlyWishlist>((event, emit) async {
-      List<Map<String, dynamic>> recentlyAllProducts =
-          await RecentlyOpreation().recentlyGet();
       final recentlyProducts = await gettingData(userId, "users");
       List<dynamic> wishlistProducts =
           recentlyProducts.data()?['wishlist'] ?? [];

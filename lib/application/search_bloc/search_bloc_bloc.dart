@@ -21,7 +21,6 @@ class SearchBlocBloc extends Bloc<SearchBlocEvent, SearchBlocState> {
     });
 
     on<UpdateSearch>((event, emit) async {
-     
       List<dynamic> searchedProducts = allProducts.where((element) {
         final name = element['name'].toLowerCase();
         final query = event.query.toLowerCase();
@@ -30,7 +29,10 @@ class SearchBlocBloc extends Bloc<SearchBlocEvent, SearchBlocState> {
       log(searchedProducts.toString());
       if (searchedProducts.isEmpty) {
         return emit(SearchBlocState(
-            isLoading: false, values: allProducts, searchedProducts: [], isNull: true));
+            isLoading: false,
+            values: allProducts,
+            searchedProducts: [],
+            isNull: true));
       } else {
         return emit(SearchBlocState(
             isLoading: false,

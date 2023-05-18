@@ -15,11 +15,13 @@ import 'package:head_x/main.dart';
 import 'package:head_x/presentation/categories/wireless_category/main_wireless.dart';
 import 'package:head_x/presentation/payments/cart_payment.dart';
 import 'package:head_x/presentation/product_details/product_details.dart';
+import 'package:head_x/presentation/profile/addresses/widgets/select_address.dart';
 import 'package:head_x/presentation/widgets/app_bar_widget.dart';
 
 import '../../application/address_showing/address_showing_bloc.dart';
 import '../../application/order_summary/order_summary_bloc.dart';
-import 'package:razorpay_flutter/razorpay_flutter.dart';
+
+// import 'package:razorpay_flutter/razorpay_flutter.dart';.
 
 class MainCart extends StatelessWidget {
   const MainCart({super.key});
@@ -27,6 +29,7 @@ class MainCart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      // BlocProvider.of<CartShowingBloc>(context).add(event)
       BlocProvider.of<CartShowingBloc>(context).add(CartgShowing());
       BlocProvider.of<ProductListBloc>(context).add(CartDetails());
       BlocProvider.of<AddressShowingBloc>(context).add(InitializeAddress());
@@ -46,6 +49,7 @@ class MainCart extends StatelessWidget {
             cartGap,
             BlocBuilder<CartShowingBloc, CartShowingState>(
               builder: (context, state) {
+                // int forCount = state.count;
                 if (state.isLoading) {
                   return const Center(
                     child: CircularProgressIndicator(),
@@ -78,7 +82,10 @@ class MainCart extends StatelessWidget {
                             Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) {
                                 return MainProductDetails(
-                                    id: data['id'], index: index);
+                                  id: data['id'],
+                                  index: index,
+                                  checking: 'normal',
+                                );
                               },
                             ));
                             BlocProvider.of<ProductListBloc>(context)
@@ -121,7 +128,6 @@ class MainCart extends StatelessWidget {
                                     BlocBuilder<CountofCartBloc,
                                         CountofCartState>(
                                       builder: (context, state) {
-                                        // log(index.toString());
                                         final count = state.cartProducts[index];
                                         return Row(
                                           children: [
@@ -130,11 +136,14 @@ class MainCart extends StatelessWidget {
                                                 await CartOperation()
                                                     .decrementCount(
                                                         data, context);
-
                                                 BlocProvider.of<
                                                             CountofCartBloc>(
                                                         context)
                                                     .add(InitializeCount());
+                                                BlocProvider.of<
+                                                            CartShowingBloc>(
+                                                        context)
+                                                    .add(CartgShowing());
                                               },
                                               child: Container(
                                                 width: 30,
@@ -164,6 +173,10 @@ class MainCart extends StatelessWidget {
                                                             CountofCartBloc>(
                                                         context)
                                                     .add(InitializeCount());
+                                                BlocProvider.of<
+                                                            CartShowingBloc>(
+                                                        context)
+                                                    .add(CartgShowing());
                                               },
                                               child: Container(
                                                 width: 30,
@@ -227,63 +240,46 @@ class MainCart extends StatelessWidget {
             );
           }
           if (state.cartValues.isNotEmpty) {
-            return BlocBuilder<AddressShowingBloc, AddressShowingState>(
-              builder: (context, state) {
-                int index = 0;
-                String name = "";
-                String remaining = "";
-                final data = state.addresses[index];
-                if (state.addresses.isNotEmpty && index == 0) {
-                  name = data['name'];
-                  remaining = '${data['addressLine1']}'
-                      '\n'
-                      '${data['addressLine2']}'
-                      '\n'
-                      '${data['city']}${data['state']}- ${data['zipcode']}';
-                }
+            int index = 0;
+            String name = "";
+            String remaining = "";
 
-                return InkWell(
-                  onTap: () async {
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return const Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      },
+            return InkWell(
+              onTap: () async {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
                     );
-                    final docData = await FirebaseFirestore.instance
-                        .collection('users')
-                        .doc(userId)
-                        .get();
-
-                    BlocProvider.of<OrderSummaryBloc>(context)
-                        .add(CartCheckoutInitialize());
-                    Navigator.pop(context);
-
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) {
-                        return CartCheckout(
-                          name: name,
-                          remaining: remaining,
-                          checking: "fromCart",
-                          cartProducts: docData.data()?['cart'] ?? [],
-                        );
-                      },
-                    ));
                   },
-                  child: Container(
-                    width: double.infinity,
-                    height: 60,
-                    color: catbarColor,
-                    child: Center(
-                        child: Text(
-                      "Check Out",
-                      style: checkOut,
-                    )),
-                  ),
                 );
+                // final docData = await FirebaseFirestore.instance
+                //     .collection('users')
+                //     .doc(userId)
+                //     .get();
+
+                Navigator.pop(context);
+
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) {
+                    return AddressSelecting(
+                      checking: 'fromCart',
+                      eachProduct: [],
+                    );
+                  },
+                ));
               },
+              child: Container(
+                width: double.infinity,
+                height: 60,
+                color: catbarColor,
+                child: Center(
+                    child: Text(
+                  "Check Out",
+                  style: checkOut,
+                )),
+              ),
             );
           }
           return const Center(

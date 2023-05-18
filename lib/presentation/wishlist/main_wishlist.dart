@@ -9,6 +9,7 @@ import 'package:head_x/application/wishlist_listing/wishlist_listing_bloc.dart';
 import 'package:head_x/firebase/wishlist/wishlist_opreation.dart';
 // import 'package:head_x/presentation/categories/main_category.dart';
 import 'package:head_x/presentation/categories/wireless_category/main_wireless.dart';
+import 'package:head_x/presentation/home/main_home.dart';
 import 'package:head_x/presentation/product_details/product_details.dart';
 import 'package:head_x/presentation/widgets/app_bar_widget.dart';
 import '../../application/wishlist_cheking/wishlist_checking_bloc.dart';
@@ -21,8 +22,6 @@ class MainWishlist extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // log(globalId.toString());
-    // log(listForWishlist.toString());
     return Scaffold(
       appBar: const PreferredSize(
           preferredSize: Size.fromHeight(50),
@@ -67,7 +66,8 @@ class MainWishlist extends StatelessWidget {
                             Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) {
                                 return MainProductDetails(
-                                    id: data['id'], index: index);
+                                    id: data['id'], index: index,checking: "normal",);
+
                               },
                             ));
                             BlocProvider.of<ProductListBloc>(context)
@@ -133,7 +133,7 @@ class MainWishlist extends StatelessWidget {
                                       width: myMediaQueryData.size.width * 0.01,
                                     ),
                                     Text(
-                                      data['price'].toString(),
+                                      '₹${data['price']}'.toString(),
                                       style: priceStyle,
                                     ),
                                     const Spacer(),
@@ -161,12 +161,21 @@ class MainWishlist extends StatelessWidget {
                                 //   )),
                                 // ),
                                 InkWell(
-                                  onTap: () {
-                                    WishlistOpreations()
+                                  onTap: () async {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return const Center(
+                                          child: CircularProgressIndicator(),
+                                        );
+                                      },
+                                    );
+                                    await WishlistOpreations()
                                         .detletion(data, index, userId);
                                     BlocProvider.of<WishlistListingBloc>(
                                             context)
                                         .add(InitializeWishlist());
+                                    Navigator.pop(context);
                                   },
                                   child: Container(
                                     width: double.infinity,

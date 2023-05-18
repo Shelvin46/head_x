@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:head_x/firebase/cart/cart_opreation.dart';
 import 'package:head_x/presentation/categories/wireless_category/main_wireless.dart';
+import 'package:head_x/presentation/home/main_home.dart';
 import 'package:meta/meta.dart';
 part 'order_summary_event.dart';
 part 'order_summary_state.dart';
@@ -30,5 +31,6 @@ class OrderSummaryBloc extends Bloc<OrderSummaryEvent, OrderSummaryState> {
           OrderSummaryState(isLoading: false, products: event.eachProduct
           ));
     });
+  
   }
 }

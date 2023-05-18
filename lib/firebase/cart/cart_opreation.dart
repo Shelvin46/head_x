@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:head_x/presentation/home/main_home.dart';
 
 import '../../application/cart_showing/cart_showing_bloc.dart';
 // import '../../application/countof_cart/countof_cart_bloc.dart';
@@ -75,12 +76,12 @@ class CartOperation {
     final docData =
         await FirebaseFirestore.instance.collection('users').doc(userId).get();
     List<Map<String, dynamic>> cartProducts = [];
-    for (var product in docData.data()?['cart']) {
+    for (var product in docData.data()?['cart'] ?? []) {
       final name = product['name'];
       final id = product['id'];
       final checking =
           await FirebaseFirestore.instance.collection('category').doc(id).get();
-      for (var product in checking.data()?['product']) {
+      for (var product in checking.data()?['product'] ?? []) {
         if (product['name'] == name) {
           cartProducts.add(product);
           break;

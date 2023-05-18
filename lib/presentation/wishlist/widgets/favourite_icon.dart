@@ -1,24 +1,25 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:head_x/application/wishlist_cheking/wishlist_checking_bloc.dart';
-import 'package:head_x/core/uiConstWidget.dart';
+// import 'package:head_x/core/uiConstWidget.dart';
 import 'package:head_x/firebase/wishlist/wishlist_opreation.dart';
 
 class FavouriteIcon extends StatelessWidget {
-  const FavouriteIcon({
-    Key? key,
-    required this.index,
-    required this.userId,
-    required this.idOfAllproduct,
-  }) : super(key: key);
+  const FavouriteIcon(
+      {Key? key,
+      required this.index,
+      required this.userId,
+      required this.idOfAllproduct,
+      required this.checking})
+      : super(key: key);
 
   final String userId;
   final int index;
   final String idOfAllproduct;
+  final String checking;
 
   @override
   Widget build(BuildContext context) {
@@ -43,8 +44,16 @@ class FavouriteIcon extends StatelessWidget {
               );
               await WishlistOpreations()
                   .detletion(valuesOfEachCategory[index], index, userId);
-              BlocProvider.of<WishlistCheckingBloc>(context)
-                  .add(SearchWishlist());
+              final docData = await gettingData(userId, "users");
+              List<dynamic> wishlistProducts =
+                  docData.data()?['wishlist'] ?? [];
+              if (checking == 'fromCategory') {
+                BlocProvider.of<WishlistCheckingBloc>(context)
+                    .add(Checking(id: userId, idofMain: idOfAllproduct));
+              } else if (checking == 'normal') {
+                BlocProvider.of<WishlistCheckingBloc>(context)
+                    .add(SearchWishlist(wishlistProducts: wishlistProducts));
+              }
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
                   backgroundColor: Colors.blue,
@@ -75,10 +84,18 @@ class FavouriteIcon extends StatelessWidget {
 
               await WishlistOpreations()
                   .wishlistUpdate(valuesOfEachCategory[index], userId);
-              BlocProvider.of<WishlistCheckingBloc>(context)
-                  .add(Checking(id: userId, idofMain: idOfAllproduct));
-              BlocProvider.of<WishlistCheckingBloc>(context)
-                  .add(SearchWishlist());
+              // BlocProvider.of<WishlistCheckingBloc>(context)
+              //     .add(Checking(id: userId, idofMain: idOfAllproduct));
+              final docData = await gettingData(userId, "users");
+              List<dynamic> wishlistProducts =
+                  docData.data()?['wishlist'] ?? [];
+              if (checking == 'fromCategory') {
+                BlocProvider.of<WishlistCheckingBloc>(context)
+                    .add(Checking(id: userId, idofMain: idOfAllproduct));
+              } else if (checking == 'normal') {
+                BlocProvider.of<WishlistCheckingBloc>(context)
+                    .add(SearchWishlist(wishlistProducts: wishlistProducts));
+              }
 
               // BlocProvider.of<>(context)
               ScaffoldMessenger.of(context).showSnackBar(

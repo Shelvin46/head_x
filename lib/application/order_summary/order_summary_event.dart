@@ -9,3 +9,5 @@ class EachProductCheckout extends OrderSummaryEvent {
   List<Map<String, dynamic>> eachProduct;
   EachProductCheckout({required this.eachProduct});
 }
+
+

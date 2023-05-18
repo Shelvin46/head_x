@@ -1,4 +1,7 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 // import 'package:cloud_firestore/cloud_firestore.dart';/
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,9 +12,14 @@ import 'package:head_x/application/wishlist_cheking/wishlist_checking_bloc.dart'
 import 'package:head_x/core/uiConstWidget.dart';
 import 'package:head_x/presentation/product_details/product_details.dart';
 import 'package:head_x/presentation/search/main_search.dart';
+import 'package:head_x/presentation/splash_screen/splash_screen.dart';
 import '../../application/countof_cart/countof_cart_bloc.dart';
 import '../../application/search_bloc/search_bloc_bloc.dart';
+import '../../firebase/recently/recently_opreation.dart';
 import '../../main.dart';
+// import '../categories/wireless_category/main_wireless.dart';
+
+final String userId = FirebaseAuth.instance.currentUser!.email.toString();
 
 class MainHome extends StatelessWidget {
   MainHome({super.key});
@@ -27,7 +35,10 @@ class MainHome extends StatelessWidget {
     BlocProvider.of<RecentlyProductsBloc>(context).add(InitialRecently());
     BlocProvider.of<ProductListBloc>(context).add(RecentlyDetails());
     BlocProvider.of<WishlistCheckingBloc>(context).add(RecentlyWishlist());
-
+    BlocProvider.of<ProductListBloc>(context).add(SearchIntoDetails());
+    BlocProvider.of<WishlistCheckingBloc>(context)
+        .add(SearchWishlist(wishlistProducts: wishlistAllProducts));
+    function();
     return Scaffold(
       body: SafeArea(
           child: SingleChildScrollView(
@@ -64,7 +75,6 @@ class MainHome extends StatelessWidget {
                           return const MainSearch();
                         },
                       ));
-                      // BlocProvider.of<ProductListBloc>(context).add(RecentlyDetails());
                       BlocProvider.of<SearchBlocBloc>(context)
                           .add(InitialSearch());
                     },
@@ -103,147 +113,6 @@ class MainHome extends StatelessWidget {
                     autoPlayInterval: const Duration(seconds: 3),
                     viewportFraction: 1)),
             homePageGap2,
-            Padding(
-              padding:
-                  EdgeInsets.only(left: myMediaQueryData.size.width * 0.04),
-              child: recentText,
-            ),
-            lstviewGap,
-            Padding(
-              padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-              child: BlocBuilder<RecentlyProductsBloc, RecentlyProductsState>(
-                builder: (context, state) {
-                  if (state.isLoadindg == true) {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }
-                  return GridView.builder(
-                    shrinkWrap: true,
-                    physics: const ScrollPhysics(),
-                    itemCount: state.products.length,
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      mainAxisSpacing: 30.0,
-                      crossAxisSpacing: 10.0,
-                      mainAxisExtent: 250,
-                    ),
-                    itemBuilder: (BuildContext context, int index) {
-                      final eachProduct = state.products[index];
-                      return InkWell(
-                        onTap: () async {
-                          Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) {
-                              return MainProductDetails(
-                                  id: eachProduct['id'], index: index);
-                            },
-                          ));
-                          BlocProvider.of<ProductListBloc>(context)
-                              .add(RecentlyDetails());
-
-                          BlocProvider.of<WishlistCheckingBloc>(context)
-                              .add(RecentlyWishlist());
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                              color: const Color.fromARGB(255, 242, 240, 240),
-                              borderRadius: BorderRadius.circular(10)),
-                          child: Column(
-                            children: [
-                              SizedBox(
-                                  height: myMediaQueryData.size.height * 0.03),
-                              // Row(
-                              //   mainAxisAlignment:
-                              //       MainAxisAlignment.spaceBetween,
-                              //   children: [
-                              //     Container(
-                              //       width: myMediaQueryData.size.width * 0.1,
-                              //       height:
-                              //           myMediaQueryData.size.height * 0.02,
-                              //       color: ratingColor,
-                              //       child: Row(
-                              //         children: [
-                              //           Padding(
-                              //             padding: cartPadding,
-                              //             child: Text(
-                              //               "4.0",
-                              //               style: ratingStyle,
-                              //             ),
-                              //           ),
-                              //           const Spacer(),
-                              //           starIcon,
-                              //         ],
-                              //       ),
-                              //     ),
-                              //     InkWell(
-                              //       onTap: () async {
-                              //         await WishlistOpreations()
-                              //             .wishlistUpdate(
-                              //                 state.productList[index],
-                              //                 userId);
-                              //       },
-                              //       child: const Icon(
-                              //         Icons.favorite,
-                              //         color: Colors.blue,
-                              //         size: 34,
-                              //       ),
-                              //     )
-                              //   ],
-                              // ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Container(
-                                    height: 140,
-                                    width: 130,
-                                    // color: Colors.amber,
-                                    decoration: BoxDecoration(
-                                        image: DecorationImage(
-                                            fit: BoxFit.fill,
-                                            image: NetworkImage(
-                                                eachProduct['images'][0]))),
-                                  )
-                                ],
-                              ),
-                              cartGap2,
-                              Row(
-                                children: [
-                                  SizedBox(
-                                    width: myMediaQueryData.size.width * 0.01,
-                                  ),
-                                  Text.rich(
-                                    TextSpan(
-                                      text: '\u20B9',
-                                      style: const TextStyle(
-                                          fontSize: 24, color: Colors.black),
-                                      children: <TextSpan>[
-                                        TextSpan(
-                                          text: eachProduct['price']
-                                              .toString(), // Price value
-                                          style: const TextStyle(
-                                              fontSize: 24,
-                                              color: Colors.black),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  const Spacer(),
-                                ],
-                              ),
-                              Text(
-                                eachProduct['name'],
-                                style: productName,
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    },
-                  );
-                },
-              ),
-            ),
             homePageGap2,
             Padding(
               padding:
@@ -272,17 +141,33 @@ class MainHome extends StatelessWidget {
                           final eachProduct = state.values[index];
                           return InkWell(
                             onTap: () async {
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return const Center(
+                                    child: CircularProgressIndicator(),
+                                  );
+                                },
+                              );
+                              final docData =
+                                  await gettingData(userId, "users");
+                              List<dynamic> wishlistProducts =
+                                  docData.data()?['wishlist'] ?? [];
+                              BlocProvider.of<ProductListBloc>(context)
+                                  .add(SearchIntoDetails());
+                              BlocProvider.of<WishlistCheckingBloc>(context)
+                                  .add(SearchWishlist(
+                                      wishlistProducts: wishlistProducts));
+                              Navigator.pop(context);
                               Navigator.of(context).push(MaterialPageRoute(
                                 builder: (context) {
                                   return MainProductDetails(
-                                      id: eachProduct['id'], index: index);
+                                    id: eachProduct['id'],
+                                    index: index,
+                                    checking: 'normal',
+                                  );
                                 },
                               ));
-                              BlocProvider.of<ProductListBloc>(context)
-                                  .add(SearchIntoDetails());
-
-                              BlocProvider.of<WishlistCheckingBloc>(context)
-                                  .add(SearchWishlist());
                             },
                             child: Container(
                               decoration: BoxDecoration(
@@ -294,51 +179,12 @@ class MainHome extends StatelessWidget {
                                   SizedBox(
                                       height:
                                           myMediaQueryData.size.height * 0.03),
-                                  // Row(
-                                  //   mainAxisAlignment:
-                                  //       MainAxisAlignment.spaceBetween,
-                                  //   children: [
-                                  //     Container(
-                                  //       width: myMediaQueryData.size.width * 0.1,
-                                  //       height:
-                                  //           myMediaQueryData.size.height * 0.02,
-                                  //       color: ratingColor,
-                                  //       child: Row(
-                                  //         children: [
-                                  //           Padding(
-                                  //             padding: cartPadding,
-                                  //             child: Text(
-                                  //               "4.0",
-                                  //               style: ratingStyle,
-                                  //             ),
-                                  //           ),
-                                  //           const Spacer(),
-                                  //           starIcon,
-                                  //         ],
-                                  //       ),
-                                  //     ),
-                                  //     InkWell(
-                                  //       onTap: () async {
-                                  //         await WishlistOpreations()
-                                  //             .wishlistUpdate(
-                                  //                 state.productList[index],
-                                  //                 userId);
-                                  //       },
-                                  //       child: const Icon(
-                                  //         Icons.favorite,
-                                  //         color: Colors.blue,
-                                  //         size: 34,
-                                  //       ),
-                                  //     )
-                                  //   ],
-                                  // ),
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Container(
                                         height: 140,
-                                        width: 130,         
-                                        // color: Colors.amber,
+                                        width: 130,
                                         decoration: BoxDecoration(
                                             image: DecorationImage(
                                                 fit: BoxFit.fill,
@@ -409,5 +255,12 @@ class MainHome extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<void> function() async {
+    recentlyAllProducts = await RecentlyOpreation().recentlyGet();
+    final docData = await gettingData(userId, "users");
+    wishlistAllProducts =
+        docData.data()?['wishlist'] ?? []; //all wishlist prducts
   }
 }

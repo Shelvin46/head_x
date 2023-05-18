@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -5,6 +7,14 @@ import 'package:head_x/application/recently_products/recently_products_bloc.dart
 import 'package:head_x/application/search_bloc/search_bloc_bloc.dart';
 import 'package:head_x/core/bottom_nav.dart';
 import 'package:head_x/presentation/auth/userLogin.dart';
+import 'package:head_x/presentation/categories/wireless_category/main_wireless.dart';
+
+import '../../application/wishlist_cheking/wishlist_checking_bloc.dart';
+import '../../firebase/recently/recently_opreation.dart';
+
+List<dynamic> productDetails = [];
+List<Map<String, dynamic>> recentlyAllProducts = [];
+List<dynamic> wishlistAllProducts = [];
 
 class SplahScrenn extends StatefulWidget {
   const SplahScrenn({super.key});
@@ -23,7 +33,7 @@ class _SplahScrennState extends State<SplahScrenn> {
 
   @override
   Widget build(BuildContext context) {
-    BlocProvider.of<RecentlyProductsBloc>(context).add(InitialRecently());
+   
     BlocProvider.of<SearchBlocBloc>(context).add(InitialSearch());
     return Scaffold(
       body: SizedBox(
@@ -43,16 +53,21 @@ class _SplahScrennState extends State<SplahScrenn> {
   }
 
   Future<void> checkingTheUser() async {
+    productDetails = await get(); // all products
+    // // all recentlu
+
+    
+    BlocProvider.of<WishlistCheckingBloc>(context)
+        .add(SearchWishlist(wishlistProducts: wishlistAllProducts));
+
     await Future.delayed(const Duration(seconds: 3));
     User? user = _auth.currentUser;
     if (user != null) {
-      // ignore: use_build_context_synchronously
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => BottomNav()),
       );
     } else {
-      // ignore: use_build_context_synchronously
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => UserLogin()),
