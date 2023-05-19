@@ -262,5 +262,6 @@ class MainHome extends StatelessWidget {
     final docData = await gettingData(userId, "users");
     wishlistAllProducts =
         docData.data()?['wishlist'] ?? []; //all wishlist prducts
+        
   }
 }

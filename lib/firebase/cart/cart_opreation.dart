@@ -1,13 +1,16 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:head_x/presentation/home/main_home.dart';
+import 'package:head_x/presentation/splash_screen/splash_screen.dart';
 
 import '../../application/cart_showing/cart_showing_bloc.dart';
 // import '../../application/countof_cart/countof_cart_bloc.dart';
-import '../../presentation/categories/wireless_category/main_wireless.dart';
+// import '../../presentation/categories/wireless_category/main_wireless.dart';/
 
 class CartOperation {
   Future<void> cartAdding(Map<String, dynamic> vale, String userId,
@@ -91,13 +94,23 @@ class CartOperation {
     return cartProducts;
   }
 
-  Future<void> incrementCount(Map<String, dynamic> product) async {
+  Future<void> incrementCount(
+      Map<String, dynamic> product, BuildContext context) async {
+    dynamic forCount =
+        productDetails.where((element) => element['name'] == product['name']);
+    Map<String, dynamic> data = {};
+    for (var element in forCount) {
+      data.addAll(element);
+    }
+    int quantity = data['quantity'];
+
     final docRef = FirebaseFirestore.instance.collection('users').doc(userId);
     final docSnapshot = await docRef.get();
     List<dynamic> cartProducts = docSnapshot.data()?['cart'] ?? [];
     final productIndex = cartProducts
         .indexWhere((element) => element['name'] == product['name']);
-    if (productIndex >= 0) {
+    log(productIndex.toString());
+    if (productIndex >= 0 && cartProducts[productIndex]['count'] < quantity) {
       final updatedProduct = {
         'name': product['name'],
         'id': product['id'],
@@ -105,6 +118,26 @@ class CartOperation {
       };
       cartProducts[productIndex] = updatedProduct;
       await docRef.update({'cart': cartProducts});
+    } else if (cartProducts[productIndex]['count'] >= quantity) {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return const AlertDialog(
+            title: Icon(
+              Icons.cancel_outlined,
+              size: 180,
+              color: Colors.red,
+            ),
+            content: Padding(
+              padding: EdgeInsets.only(left: 40),
+              child: Text(
+                'Out of Stock',
+                style: TextStyle(fontSize: 30),
+              ),
+            ),
+          );
+        },
+      );
     }
   }
 
@@ -121,13 +154,13 @@ class CartOperation {
         'id': product['id'],
         'count': cartProducts[productIndex]['count'] - 1,
       };
+
       cartProducts[productIndex] = updatedProduct;
       await docRef.update({'cart': cartProducts});
     }
     if (cartProducts[productIndex]['count'] == 0) {
       cartProducts.removeAt(productIndex);
       await docRef.update({'cart': cartProducts});
-      // ignore: use_build_context_synchronously
       zeroDeletion(context);
     }
   }

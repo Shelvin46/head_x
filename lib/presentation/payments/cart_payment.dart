@@ -10,6 +10,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:head_x/application/address_selecting/address_selecting_bloc.dart';
 import 'package:head_x/application/cart_showing/cart_showing_bloc.dart';
 import 'package:head_x/application/order_summary/order_summary_bloc.dart';
+import 'package:head_x/application/search_bloc/search_bloc_bloc.dart';
 import 'package:head_x/core/bottom_nav.dart';
 import 'package:head_x/core/uiConstant.dart';
 import 'package:head_x/firebase/orders/orders_listing.dart';
@@ -18,6 +19,7 @@ import 'package:head_x/presentation/categories/wireless_category/main_wireless.d
 import 'package:head_x/presentation/home/main_home.dart';
 // import 'package:head_x/presentation/payments/payment_screen.dart';
 import 'package:head_x/presentation/payments/widgets/address_changing.dart';
+import 'package:head_x/presentation/splash_screen/splash_screen.dart';
 import 'package:head_x/presentation/widgets/app_bar_widget.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import '../../core/uiConstWidget.dart';
@@ -61,7 +63,6 @@ class _CartCheckoutState extends State<CartCheckout> {
   }
 
   void makePayment(int amount) async {
-    // var amount = widget.buynow ? buyNowTotals : total ?? 0;
     var options = {
       'key': 'rzp_test_3LZeDnsfAcnqSf',
       'amount': amount * 100,
@@ -103,10 +104,12 @@ class _CartCheckoutState extends State<CartCheckout> {
           .collection('users')
           .doc(userId)
           .update({'cart': cardList});
+      await toDecreaseQuantityCart(payProducts);
+
       BlocProvider.of<OrderSummaryBloc>(context).add(CartCheckoutInitialize());
       BlocProvider.of<CartShowingBloc>(context).add(CartgShowing());
-
       Navigator.pop(context);
+
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text("Order Successfully Completed"),
         backgroundColor: Colors.blue,
@@ -116,14 +119,26 @@ class _CartCheckoutState extends State<CartCheckout> {
           return BottomNav();
         },
       ), (route) => false);
+      productDetails = await get();
     } else if (widget.checking == 'normal') {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        },
+      );
       await OrdersListing().ordersAdding(payProducts, false);
+      await toDecreaseQuandity(payProducts);
       BlocProvider.of<OrderSummaryBloc>(context)
           .add(EachProductCheckout(eachProduct: []));
+      Navigator.pop(context);
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text("Order Successfully Completed"),
         backgroundColor: Colors.blue,
       ));
+
       Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
         builder: (context) {
           return BottomNav();
@@ -202,62 +217,62 @@ class _CartCheckoutState extends State<CartCheckout> {
         children: [
           addressGap,
           Container(
-              width: double.infinity,
-              height: myMediaQueryData.size.height * 0.250,
-              color: Colors.white,
-              child: Column(
-                children: [
-                  const Padding(
-                    padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
-                    child: AdressChanging(),
-                  ),
-                  BlocBuilder<AddressSelectingBloc, AddressSelectingState>(
-                    builder: (context, state) {
-                      log(name.toString());
-                      log(address.toString());
-                      if (state.addressLine1.isNotEmpty &&
-                          state.addressLine2.isNotEmpty &&
-                          state.name.isNotEmpty &&
-                          state.city.isNotEmpty &&
-                          state.code.isNotEmpty &&
-                          state.state.isNotEmpty) {
-                        name = state.name;
-                        address = '${state.addressLine1}'
-                            '\n'
-                            '${state.addressLine2}'
-                            '\n'
-                            '${state.city}${state.state}- ${state.code}';
-                        return Column(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(state.name, style: addressName),
-                                ],
-                              ),
-                            ),
-                            addressGap,
-                            Row(
+            width: double.infinity,
+            height: myMediaQueryData.size.height * 0.250,
+            color: Colors.white,
+            child: Column(
+              children: [
+                const Padding(
+                  padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
+                  child: AdressChanging(),
+                ),
+                BlocBuilder<AddressSelectingBloc, AddressSelectingState>(
+                  builder: (context, state) {
+                    log(name.toString());
+                    log(address.toString());
+                    if (state.addressLine1.isNotEmpty &&
+                        state.addressLine2.isNotEmpty &&
+                        state.name.isNotEmpty &&
+                        state.city.isNotEmpty &&
+                        state.code.isNotEmpty &&
+                        state.state.isNotEmpty) {
+                      name = state.name;
+                      address = '${state.addressLine1}'
+                          '\n'
+                          '${state.addressLine2}'
+                          '\n'
+                          '${state.city}${state.state}- ${state.code}';
+                      return Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 20),
-                                  child: Text('${state.addressLine1}'
-                                      '\n'
-                                      '${state.addressLine2}'
-                                      '\n'
-                                      '${state.city}${state.state}- ${state.code}'),
-                                ),
+                                Text(state.name, style: addressName),
                               ],
                             ),
-                          ],
-                        );
-                      }
-                      name = widget.name;
-                      address = widget.remaining;
-                      return Column(children: [
+                          ),
+                          addressGap,
+                          Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(left: 20),
+                                child: Text('${state.addressLine1}'
+                                    '\n'
+                                    '${state.addressLine2}'
+                                    '\n'
+                                    '${state.city}${state.state}- ${state.code}'),
+                              ),
+                            ],
+                          ),
+                        ],
+                      );
+                    }
+                    name = widget.name;
+                    address = widget.remaining;
+                    return Column(
+                      children: [
                         Padding(
                           padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
                           child: Row(
@@ -276,11 +291,13 @@ class _CartCheckoutState extends State<CartCheckout> {
                             ),
                           ],
                         ),
-                      ]);
-                    },
-                  )
-                ],
-              )),
+                      ],
+                    );
+                  },
+                )
+              ],
+            ),
+          ),
           addressGap,
           Expanded(
             child: BlocBuilder<OrderSummaryBloc, OrderSummaryState>(
@@ -296,7 +313,6 @@ class _CartCheckoutState extends State<CartCheckout> {
                   );
                 }
                 return ListView.separated(
-                    // physics: ClampingScrollPhysics(),
                     scrollDirection: Axis.vertical,
                     itemBuilder: (context, index) {
                       final data = state.products[index];
@@ -340,7 +356,7 @@ class _CartCheckoutState extends State<CartCheckout> {
                                   style: cartPriceStyle,
                                 )
                               ],
-                            )
+                            ),
                           ],
                         ),
                       );
@@ -354,13 +370,58 @@ class _CartCheckoutState extends State<CartCheckout> {
           ),
           SizedBox(
             height: myMediaQueryData.size.height * 0.05,
-          )
+          ),
         ],
       ),
     );
   }
-}
 
-// Future<void> deletingCard() async {
- 
-// }
+  Future<void> toDecreaseQuandity(List<dynamic> products) async {
+    final data = await FirebaseFirestore.instance.collection('category').get();
+    for (var docs in data.docs) {
+      for (var eachOrder in products) {
+        if (docs.id == eachOrder['id']) {
+          final docData = await FirebaseFirestore.instance
+              .collection('category')
+              .doc(docs.id)
+              .get();
+          List<dynamic> allProducts = await docData.data()?['product'] ?? [];
+          for (var eachProduct in allProducts) {
+            if (eachOrder['name'] == eachProduct['name']) {
+              eachProduct['quantity'] = eachProduct['quantity'] - 1;
+            }
+          }
+          await FirebaseFirestore.instance
+              .collection('category')
+              .doc(docs.id)
+              .update({'product': allProducts});
+        }
+      }
+    }
+  }
+
+  Future<void> toDecreaseQuantityCart(List<dynamic> products) async {
+    final data = await FirebaseFirestore.instance.collection('category').get();
+    for (var docs in data.docs) {
+      for (var eachOrder in products) {
+        if (docs.id == eachOrder['id']) {
+          final docData = await FirebaseFirestore.instance
+              .collection('category')
+              .doc(docs.id)
+              .get();
+          List<dynamic> allProducts = await docData.data()?['product'] ?? [];
+          for (var eachProduct in allProducts) {
+            if (eachOrder['name'] == eachProduct['name']) {
+              eachProduct['quantity'] =
+                  eachProduct['quantity'] - eachOrder['count'];
+            }
+          }
+          await FirebaseFirestore.instance
+              .collection('category')
+              .doc(docs.id)
+              .update({'product': allProducts});
+        }
+      }
+    }
+  }
+}

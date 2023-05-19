@@ -19,7 +19,7 @@ import 'package:head_x/presentation/profile/addresses/widgets/select_address.dar
 import 'package:head_x/presentation/widgets/app_bar_widget.dart';
 
 import '../../application/address_showing/address_showing_bloc.dart';
-import '../../application/order_summary/order_summary_bloc.dart';
+// import '../../application/order_summary/order_summary_bloc.dart';
 
 // import 'package:razorpay_flutter/razorpay_flutter.dart';.
 
@@ -76,7 +76,6 @@ class MainCart extends StatelessWidget {
                       ),
                       itemBuilder: (BuildContext context, int index) {
                         final data = state.cartValues[index];
-                        // log(data['count'].toString());
                         return InkWell(
                           onTap: () {
                             Navigator.of(context).push(MaterialPageRoute(
@@ -136,6 +135,7 @@ class MainCart extends StatelessWidget {
                                                 await CartOperation()
                                                     .decrementCount(
                                                         data, context);
+
                                                 BlocProvider.of<
                                                             CountofCartBloc>(
                                                         context)
@@ -167,7 +167,8 @@ class MainCart extends StatelessWidget {
                                             InkWell(
                                               onTap: () async {
                                                 await CartOperation()
-                                                    .incrementCount(data);
+                                                    .incrementCount(
+                                                        data, context);
 
                                                 BlocProvider.of<
                                                             CountofCartBloc>(

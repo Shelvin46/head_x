@@ -1,5 +1,9 @@
 // ignore_for_file: use_build_context_synchronously
 
+// import 'dart:math';
+
+import 'dart:developer';
+
 import 'package:carousel_slider/carousel_slider.dart';
 // import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +12,7 @@ import 'package:head_x/application/address_showing/address_showing_bloc.dart';
 // import 'package:head_x/application/address_showing/address_showing_bloc.dart';
 import 'package:head_x/application/countof_cart/countof_cart_bloc.dart';
 import 'package:head_x/application/indicator_bloc/indicator_bloc_bloc.dart';
-import 'package:head_x/application/order_summary/order_summary_bloc.dart';
+// import 'package:head_x/application/order_summary/order_summary_bloc.dart';
 import 'package:head_x/application/product_list/product_list_bloc.dart';
 import 'package:head_x/core/uiConstWidget.dart';
 import 'package:head_x/core/uiConstant.dart';
@@ -16,7 +20,7 @@ import 'package:head_x/core/uiConstant.dart';
 import 'package:head_x/firebase/cart/cart_opreation.dart';
 // import 'package:head_x/firebase/wishlist/wishlist_opreation.dart';
 import 'package:head_x/main.dart';
-import 'package:head_x/presentation/categories/wireless_category/main_wireless.dart';
+// import 'package:head_x/presentation/categories/wireless_category/main_wireless.dart';
 import 'package:head_x/presentation/home/main_home.dart';
 // import 'package:head_x/presentation/payments/cart_payment.dart';
 // import 'package:head_x/presentation/order_details/order_summary.dart';
@@ -46,6 +50,8 @@ class MainProductDetails extends StatelessWidget {
       bottomSheet: BlocBuilder<ProductListBloc, ProductListState>(
         builder: (context, state) {
           final data = state.productList[index];
+          // log(x)
+          log(data.toString());
           return Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             key: UniqueKey(),
@@ -98,12 +104,34 @@ class MainProductDetails extends StatelessWidget {
                   Navigator.pop(context);
                   BlocProvider.of<AddressShowingBloc>(context)
                       .add(InitializeAddress());
-                  Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) {
-                      return AddressSelecting(
-                          checking: 'normal', eachProduct: intoCheckout);
-                    },
-                  ));
+                  if (data['quantity'] > 0) {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) {
+                        return AddressSelecting(
+                            checking: 'normal', eachProduct: intoCheckout);
+                      },
+                    ));
+                  } else if (data['quantity'] <= 0) {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return const AlertDialog(
+                          title: Icon(
+                            Icons.cancel_outlined,
+                            size: 180,
+                            color: Colors.red,
+                          ),
+                          content: Padding(
+                            padding: EdgeInsets.only(left: 40),
+                            child: Text(
+                              'Out of Stock',
+                              style: TextStyle(fontSize: 30),
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  }
                 },
                 child: Container(
                   width: myMediaQueryData.size.width * 0.5,

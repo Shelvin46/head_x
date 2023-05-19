@@ -98,12 +98,21 @@ class _UserLoginState extends State<UserLogin> {
           loginPageGap4,
           InkWell(
             onTap: () {
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                },
+              );
               if (_formKey.currentState!.validate()) {
                 FirebaseAuth.instance
                     .signInWithEmailAndPassword(
                         email: emailController.text,
                         password: passwordController.text)
                     .then((value) {
+                  Navigator.of(context).pop();
                   Navigator.pushReplacement(context, MaterialPageRoute(
                     builder: (context) {
                       return BottomNav();
@@ -156,7 +165,7 @@ class _UserLoginState extends State<UserLogin> {
             height: 20,
           ),
           InkWell(
-            onTap: () async {     
+            onTap: () async {
               await FiireBaseGoogle().signInWithGoogle();
               // ignore: use_build_context_synchronously
               Navigator.push(context, MaterialPageRoute(

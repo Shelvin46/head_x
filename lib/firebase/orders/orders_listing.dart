@@ -18,7 +18,7 @@ class OrdersListing {
       });
     }
     try {
-      log("bdsfbdfs");
+      // log("bdsfbdfs");
       final docData = await FirebaseFirestore.instance
           .collection('users')
           .doc(userId)

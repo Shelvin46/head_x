@@ -47,7 +47,8 @@ class UserSignup extends StatelessWidget {
                 height: myMediaQueryData.size.height * 0.07,
                 width: myMediaQueryData.size.height * 0.4,
                 decoration: stextformRadius,
-                child: TextField(
+                child: TextFormField(
+                  style: TextStyle(color: Colors.white),
                   decoration: InputDecoration(
                       border: InputBorder.none,
                       labelText: "  Firstname",
@@ -59,7 +60,8 @@ class UserSignup extends StatelessWidget {
                 height: myMediaQueryData.size.height * 0.07,
                 width: myMediaQueryData.size.height * 0.4,
                 decoration: stextformRadius,
-                child: TextField(
+                child: TextFormField(
+                  style: TextStyle(color: Colors.white),
                   decoration: InputDecoration(
                       border: InputBorder.none,
                       labelText: "  Lastname",
@@ -71,7 +73,8 @@ class UserSignup extends StatelessWidget {
                 height: myMediaQueryData.size.height * 0.07,
                 width: myMediaQueryData.size.height * 0.4,
                 decoration: stextformRadius,
-                child: TextField(
+                child: TextFormField(
+                  style: TextStyle(color: Colors.white),
                   decoration: InputDecoration(
                       border: InputBorder.none,
                       labelText: "  Mobile no",
