@@ -1,5 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:developer';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 // import 'package:cloud_firestore/cloud_firestore.dart';/
@@ -10,6 +12,8 @@ import 'package:head_x/application/recently_products/recently_products_bloc.dart
 import 'package:head_x/application/wishlist_cheking/wishlist_checking_bloc.dart';
 // import 'package:head_x/application/search_bloc/search_bloc_bloc.dart';
 import 'package:head_x/core/uiConstWidget.dart';
+import 'package:head_x/firebase/personDetails/details.dart';
+// import 'package:head_x/presentation/auth/userSignup.dart';
 import 'package:head_x/presentation/product_details/product_details.dart';
 import 'package:head_x/presentation/search/main_search.dart';
 import 'package:head_x/presentation/splash_screen/splash_screen.dart';
@@ -20,6 +24,14 @@ import '../../main.dart';
 // import '../categories/wireless_category/main_wireless.dart';
 
 final String userId = FirebaseAuth.instance.currentUser!.email.toString();
+final String fromGooglePhoto =
+    FirebaseAuth.instance.currentUser!.photoURL.toString();
+final String fromGoogleName =
+    FirebaseAuth.instance.currentUser!.displayName.toString();
+final String fromGoogleEmail =
+    FirebaseAuth.instance.currentUser!.email.toString();
+final String fromGooglePhone =
+    FirebaseAuth.instance.currentUser!.phoneNumber.toString();
 
 class MainHome extends StatelessWidget {
   MainHome({super.key});
@@ -38,7 +50,9 @@ class MainHome extends StatelessWidget {
     BlocProvider.of<ProductListBloc>(context).add(SearchIntoDetails());
     BlocProvider.of<WishlistCheckingBloc>(context)
         .add(SearchWishlist(wishlistProducts: wishlistAllProducts));
+    // log(globalFirstName.text.toString());
     function();
+
     return Scaffold(
       body: SafeArea(
           child: SingleChildScrollView(
@@ -262,6 +276,8 @@ class MainHome extends StatelessWidget {
     final docData = await gettingData(userId, "users");
     wishlistAllProducts =
         docData.data()?['wishlist'] ?? []; //all wishlist prducts
-        
+    // FirebaseAuth.instance.currentUser.displayName
+   
   }
+  // Future
 }

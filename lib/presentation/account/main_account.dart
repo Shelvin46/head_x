@@ -18,6 +18,8 @@ import 'package:head_x/presentation/widgets/app_bar_widget.dart';
 import 'package:head_x/presentation/wishlist/main_wishlist.dart';
 
 import '../../application/address_showing/address_showing_bloc.dart';
+import '../../firebase/personDetails/details.dart';
+import '../auth/userSignup.dart';
 
 class MainAccount extends StatelessWidget {
   const MainAccount({super.key});
@@ -162,12 +164,14 @@ class MainAccount extends StatelessWidget {
                       ),
                     ),
                     InkWell(
-                      onTap: () {
+                      onTap: () async {
                         Navigator.push(context, MaterialPageRoute(
                           builder: (context) {
                             return EditProfileOne();
                           },
                         ));
+                        // log(globalFirstName.text);
+                      
                       },
                       child: AccountDetails(
                           icon: Icons.account_circle_outlined,

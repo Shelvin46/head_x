@@ -1,6 +1,6 @@
 import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:head_x/presentation/categories/wireless_category/main_wireless.dart';
+// import 'package:head_x/presentation/categories/wireless_category/main_wireless.dart';
 import 'package:head_x/presentation/home/main_home.dart';
 
 class AddressAdding {
@@ -16,7 +16,8 @@ class AddressAdding {
         'cart': [],
         'recently': [],
         'address': [],
-        'orders': []
+        'orders': [],
+        'personDetails': []
       });
     }
     try {
@@ -26,7 +27,6 @@ class AddressAdding {
           .get();
       List<dynamic> adresses = docData.data()?['address'] ?? [];
       if (docData.exists) {
-        // log("Hii");
         adresses.add({
           'addressLine1': addressLine1,
           'addressLine2': addressLine2,

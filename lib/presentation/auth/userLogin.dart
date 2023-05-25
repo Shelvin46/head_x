@@ -1,14 +1,21 @@
+// import 'dart:math';
+// ignore_for_file: use_build_context_synchronously
+
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:head_x/core/bottom_nav.dart';
 import 'package:head_x/core/uiConstWidget.dart';
 import 'package:head_x/core/uiConstant.dart';
 import 'package:head_x/firebase/firebase_services/google_signin.dart';
+import 'package:head_x/firebase/personDetails/details.dart';
 import 'package:head_x/presentation/auth/userSignup.dart';
+import 'package:head_x/presentation/home/main_home.dart';
 import '../../main.dart';
 
 class UserLogin extends StatefulWidget {
-  UserLogin({super.key});
+  const UserLogin({super.key});
 
   @override
   State<UserLogin> createState() => _UserLoginState();
@@ -98,20 +105,24 @@ class _UserLoginState extends State<UserLogin> {
           loginPageGap4,
           InkWell(
             onTap: () {
-              showDialog(
-                context: context,
-                builder: (context) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                },
-              );
               if (_formKey.currentState!.validate()) {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  },
+                );
                 FirebaseAuth.instance
                     .signInWithEmailAndPassword(
                         email: emailController.text,
                         password: passwordController.text)
-                    .then((value) {
+                    .then((value) async {
+                  // log(x)
+                  // log("one");
+                  // log(userId.toString());aw
+                  await AddingDetails().detailsAdding();
                   Navigator.of(context).pop();
                   Navigator.pushReplacement(context, MaterialPageRoute(
                     builder: (context) {
@@ -151,6 +162,9 @@ class _UserLoginState extends State<UserLogin> {
                         return UserSignup();
                       },
                     ));
+                    globalFirstName.clear();
+                    globalLastName.clear();
+                    globalMobileNumber.clear();
                   },
                   child: Padding(
                     padding: EdgeInsets.only(
@@ -166,9 +180,19 @@ class _UserLoginState extends State<UserLogin> {
           ),
           InkWell(
             onTap: () async {
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                },
+              );
               await FiireBaseGoogle().signInWithGoogle();
-              // ignore: use_build_context_synchronously
-              Navigator.push(context, MaterialPageRoute(
+              log(userId);
+              await AddingDetails().detailsAdding();
+              Navigator.pop(context);
+              Navigator.pushReplacement(context, MaterialPageRoute(
                 builder: (context) {
                   return BottomNav();
                 },

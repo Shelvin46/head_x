@@ -4,9 +4,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:head_x/core/uiConstWidget.dart';
 import 'package:head_x/presentation/auth/userLogin.dart';
-
-import '../../firebase/firebase_services/login_with_email.dart';
+// import '../../firebase/firebase_services/login_with_email.dart';
 import '../../main.dart';
+
+final globalFirstName = TextEditingController();
+final globalLastName = TextEditingController();
+final globalMobileNumber = TextEditingController();
 
 class UserSignup extends StatelessWidget {
   UserSignup({super.key});
@@ -48,11 +51,13 @@ class UserSignup extends StatelessWidget {
                 width: myMediaQueryData.size.height * 0.4,
                 decoration: stextformRadius,
                 child: TextFormField(
+                  controller: globalFirstName,
                   style: TextStyle(color: Colors.white),
                   decoration: InputDecoration(
                       border: InputBorder.none,
-                      labelText: "  Firstname",
-                      labelStyle: labelColor),
+                      labelText: "Firstname",
+                      labelStyle: labelColor,
+                      contentPadding: const EdgeInsets.only(left: 16)),
                 ),
               ),
               loginPageGap2,
@@ -61,11 +66,13 @@ class UserSignup extends StatelessWidget {
                 width: myMediaQueryData.size.height * 0.4,
                 decoration: stextformRadius,
                 child: TextFormField(
-                  style: TextStyle(color: Colors.white),
+                  controller: globalLastName,
+                  style: const TextStyle(color: Colors.white),
                   decoration: InputDecoration(
                       border: InputBorder.none,
-                      labelText: "  Lastname",
-                      labelStyle: labelColor),
+                      labelText: "Lastname",
+                      labelStyle: labelColor,
+                      contentPadding: const EdgeInsets.only(left: 16)),
                 ),
               ),
               loginPageGap2,
@@ -74,11 +81,13 @@ class UserSignup extends StatelessWidget {
                 width: myMediaQueryData.size.height * 0.4,
                 decoration: stextformRadius,
                 child: TextFormField(
-                  style: TextStyle(color: Colors.white),
+                  controller: globalMobileNumber,
+                  style: const TextStyle(color: Colors.white),
                   decoration: InputDecoration(
                       border: InputBorder.none,
-                      labelText: "  Mobile no",
-                      labelStyle: labelColor),
+                      labelText: "Mobile no",
+                      labelStyle: labelColor,
+                      contentPadding: const EdgeInsets.only(left: 16)),
                 ),
               ),
               loginPageGap2,
@@ -91,7 +100,7 @@ class UserSignup extends StatelessWidget {
                       width: myMediaQueryData.size.height * 0.4,
                       decoration: stextformRadius,
                       child: TextFormField(
-                        style: TextStyle(color: Colors.white),
+                        style: const TextStyle(color: Colors.white),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Please enter a Emai id';
@@ -103,7 +112,7 @@ class UserSignup extends StatelessWidget {
                             border: InputBorder.none,
                             labelText: "Email id",
                             labelStyle: labelColor,
-                            contentPadding: EdgeInsets.only(left: 16)),
+                            contentPadding: const EdgeInsets.only(left: 16)),
                       ),
                     ),
                     // loginPageGap2,
@@ -113,7 +122,7 @@ class UserSignup extends StatelessWidget {
                       width: myMediaQueryData.size.height * 0.4,
                       decoration: stextformRadius,
                       child: TextFormField(
-                        style: TextStyle(color: Colors.white),
+                        style: const TextStyle(color: Colors.white),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Please enter a password';
@@ -128,7 +137,7 @@ class UserSignup extends StatelessWidget {
                             border: InputBorder.none,
                             labelText: "Create password",
                             labelStyle: labelColor,
-                            contentPadding: EdgeInsets.only(left: 16)),
+                            contentPadding: const EdgeInsets.only(left: 16)),
                       ),
                     ),
                   ],
@@ -141,12 +150,21 @@ class UserSignup extends StatelessWidget {
                 child: InkWell(
                   onTap: () {
                     if (formKey.currentState!.validate()) {
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        },
+                      );
                       FirebaseAuth.instance
                           .createUserWithEmailAndPassword(
                         email: emailController.text.trim(),
                         password: passwordController.text.trim(),
                       )
-                          .then((value) {
+                      .then((value) {
+                        Navigator.pop(context);
                         Navigator.pop(context);
                       }).onError((error, stackTrace) {
                         ScaffoldMessenger.of(context).showSnackBar(

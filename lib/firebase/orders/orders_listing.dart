@@ -15,6 +15,7 @@ class OrdersListing {
         'recently': [],
         'address': [],
         'orders': [],
+        'personDetails': []
       });
     }
     try {

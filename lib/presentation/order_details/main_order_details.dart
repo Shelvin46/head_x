@@ -1,8 +1,21 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'dart:developer';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:head_x/application/wishlist_cheking/wishlist_checking_bloc.dart';
+import 'package:head_x/core/bottom_nav.dart';
 // import 'package:flutter/services.dart';
 import 'package:head_x/core/uiConstWidget.dart';
 import 'package:head_x/main.dart';
+import 'package:head_x/presentation/home/main_home.dart';
+// import 'package:head_x/presentation/order_details/main_orders.dart';
+import 'package:head_x/presentation/splash_screen/splash_screen.dart';
 import 'package:head_x/presentation/widgets/app_bar_widget.dart';
+
+import '../../application/order_details/order_details_bloc.dart';
 
 class MainOrderDetails extends StatelessWidget {
   const MainOrderDetails(
@@ -13,7 +26,8 @@ class MainOrderDetails extends StatelessWidget {
       required this.price,
       required this.remaining,
       required this.image,
-      required this.total})
+      required this.total,
+      required this.index})
       : super(key: key);
   final String name;
   final String remaining;
@@ -22,6 +36,7 @@ class MainOrderDetails extends StatelessWidget {
   final String pname;
   final String image;
   final dynamic total;
+  final int index;
 
   @override
   Widget build(BuildContext context) {
@@ -111,76 +126,62 @@ class MainOrderDetails extends StatelessWidget {
               ),
             ),
           ),
-
-          // SizedBox(
-          //     width: double.infinity,
-          //     height: myMediaQueryData.size.height * 0.450,
-          //     child: Column(
-          //       crossAxisAlignment: CrossAxisAlignment.start,
-          //       children: [
-          //         orderGap3,
-          //         Row(
-          //           children: [
-          //             Padding(
-          //               padding: EdgeInsets.only(
-          //                   left: myMediaQueryData.size.width * 0.06),
-          //               child: const CircleAvatar(
-          //                 radius: 15,
-          //                 backgroundColor: Colors.blue,
-          //               ),
-          //             ),
-          //             orderGap4,
-          //             Text("Order Placed", style: orderStatus)
-          //           ],
-          //         ),
-          //         Padding(
-          //           padding: EdgeInsets.only(
-          //               left: myMediaQueryData.size.width * 0.085),
-          //           child: Container(
-          //             height: 110,
-          //             width: 10,
-          //             color: Colors.grey,
-          //           ),
-          //         ),
-          //         Row(
-          //           children: [
-          //             Padding(
-          //               padding: EdgeInsets.only(
-          //                   left: myMediaQueryData.size.width * 0.06),
-          //               child: const CircleAvatar(
-          //                 radius: 15,
-          //                 backgroundColor: Colors.grey,
-          //               ),
-          //             ),
-          //             orderGap4,
-          //             Text("Order Shipped", style: orderStatus)
-          //           ],
-          //         ),
-          //         Padding(
-          //           padding: EdgeInsets.only(
-          //               left: myMediaQueryData.size.width * 0.085),
-          //           child: Container(
-          //             height: 110,
-          //             width: 10,
-          //             color: Colors.grey,
-          //           ),
-          //         ),
-          //         Row(
-          //           children: [
-          //             Padding(
-          //               padding: EdgeInsets.only(
-          //                   left: myMediaQueryData.size.width * 0.06),
-          //               child: const CircleAvatar(
-          //                 radius: 15,
-          //                 backgroundColor: Colors.grey,
-          //               ),
-          //             ),
-          //             orderGap4,
-          //             Text("Deliverd", style: orderStatus)
-          //           ],
-          //         ),
-          //       ],
-          //     )),
+          SizedBox(
+            height: myMediaQueryData.size.height * 0.02,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              const Text('Do you want to cancel this order?'),
+              ElevatedButton(
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: const Text('Cancel Order'),
+                          content: const Text(
+                              'Are you sure you want to cancel this order?'),
+                          actions: [
+                            TextButton(
+                              child: const Text('Cancel'),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                            ElevatedButton(
+                              child: const Text('Delete'),
+                              onPressed: () async {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return const Center(
+                                      child: CircularProgressIndicator(),
+                                    );
+                                  },
+                                );
+                                await cancelOrder();
+                                await deleteFromOrders(index);
+                                BlocProvider.of<OrderDetailsBloc>(context)
+                                    .add(InitializeDetails());
+                                Navigator.of(context).pop();
+                                Navigator.pop(context);
+                                Navigator.pushAndRemoveUntil(context,
+                                    MaterialPageRoute(
+                                  builder: (context) {
+                                    return BottomNav();
+                                  },
+                                ), (route) => false);
+                              },
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
+                  child: const Text('Cancel'))
+            ],
+          )
         ],
       ),
       bottomSheet: Container(
@@ -205,5 +206,40 @@ class MainOrderDetails extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<void> cancelOrder() async {
+    List<dynamic> wantToUpdate = [];
+    String productId = '';
+    for (var mainProduct in productDetails) {
+      if (mainProduct['name'] == pname) {
+        final docData = await FirebaseFirestore.instance
+            .collection('category')
+            .doc(mainProduct['id'])
+            .get();
+        wantToUpdate = docData.data()?['product'] ?? [];
+      }
+    }
+    for (var product in wantToUpdate) {
+      if (product['name'] == pname) {
+        productId = product['id'];
+        product['quantity'] = product['quantity'] + count;
+      }
+    }
+    await FirebaseFirestore.instance
+        .collection('category')
+        .doc(productId)
+        .update({'product': wantToUpdate});
+  }
+
+  Future<void> deleteFromOrders(int index) async {
+    log(index.toString());
+    final docData = await gettingData(userId, 'users');
+    List<dynamic> ordersList = docData.data()?['orders'] ?? [];
+    ordersList.removeWhere((product) => product['name'] == pname);
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .update({'orders': ordersList});
   }
 }

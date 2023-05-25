@@ -16,7 +16,8 @@ class WishlistOpreations {
         'cart': [],
         'recently': [],
         'address': [],
-        'orders': []
+        'orders': [],
+        'personDetails': []
       });
     }
 
@@ -54,8 +55,7 @@ class WishlistOpreations {
   Future<List<Map<String, dynamic>>> get(String userId) async {
     final docData =
         await FirebaseFirestore.instance.collection('users').doc(userId).get();
-    final List<dynamic> eachData =
-        (docData.data() as Map<String, dynamic>)['wishlist'];
+    final List<dynamic> eachData = docData.data()?['wishlist'] ?? [];
     List<Map<String, dynamic>> wishlistProducts = [];
     for (var element in eachData) {
       final name = element['name'];
@@ -64,7 +64,7 @@ class WishlistOpreations {
           await FirebaseFirestore.instance.collection('category').doc(id).get();
       for (var product
           in (checking.data() as Map<String, dynamic>)['product']) {
-        if (product['name'] == name) {
+        if (product['name'] == name) {  
           wishlistProducts.add(product);
           break;
         }

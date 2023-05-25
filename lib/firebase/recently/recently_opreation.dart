@@ -16,7 +16,8 @@ class RecentlyOpreation {
         'cart': [],
         'recently': [],
         'address': [],
-        'orders': []
+        'orders': [],
+        'personDetails': []
       });
     }
     try {

@@ -26,6 +26,7 @@ class CartOperation {
         'recently': [],
         'address': [],
         'orders': [],
+        'personDetails': []
       });
     }
     try {
@@ -35,7 +36,7 @@ class CartOperation {
       if (!docSnapshot.exists) {
         throw Exception("User document doesn't exist");
       }
-      List<dynamic> cart = docSnapshot.data()?['cart'];
+      List<dynamic> cart = docSnapshot.data()?['cart']??[];
       final value = cart.where((element) => element['name'] == vale['name']);
       if (value.isNotEmpty) {
         // ignore: use_build_context_synchronously
@@ -50,7 +51,6 @@ class CartOperation {
       } else {
         cart.add({'name': vale['name'], 'id': vale['id'], 'count': count});
         await docData.update({'cart': cart});
-        // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             backgroundColor: Colors.blue,
