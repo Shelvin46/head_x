@@ -1,7 +1,4 @@
 // ignore_for_file: use_build_context_synchronously
-
-import 'dart:developer';
-
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 // import 'package:cloud_firestore/cloud_firestore.dart';/
@@ -12,7 +9,6 @@ import 'package:head_x/application/recently_products/recently_products_bloc.dart
 import 'package:head_x/application/wishlist_cheking/wishlist_checking_bloc.dart';
 // import 'package:head_x/application/search_bloc/search_bloc_bloc.dart';
 import 'package:head_x/core/uiConstWidget.dart';
-import 'package:head_x/firebase/personDetails/details.dart';
 // import 'package:head_x/presentation/auth/userSignup.dart';
 import 'package:head_x/presentation/product_details/product_details.dart';
 import 'package:head_x/presentation/search/main_search.dart';
@@ -79,7 +75,8 @@ class MainHome extends StatelessWidget {
                 child: Padding(
                   padding:
                       EdgeInsets.only(left: myMediaQueryData.size.width * 0.03),
-                  child: TextField(
+                  child: TextFormField(
+                    readOnly: true,
                     style: const TextStyle(
                         color: Color.fromARGB(255, 255, 255, 255)),
                     onTap: () {
@@ -120,7 +117,7 @@ class MainHome extends StatelessWidget {
                   return buildImage(listOne, index);
                 },
                 options: CarouselOptions(
-                    pageSnapping: false,
+                    // pageSnapping: false,
                     enableInfiniteScroll: false,
                     height: 170,
                     autoPlay: true,
@@ -277,7 +274,6 @@ class MainHome extends StatelessWidget {
     wishlistAllProducts =
         docData.data()?['wishlist'] ?? []; //all wishlist prducts
     // FirebaseAuth.instance.currentUser.displayName
-   
   }
   // Future
 }

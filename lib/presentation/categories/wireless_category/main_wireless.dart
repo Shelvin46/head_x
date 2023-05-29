@@ -12,6 +12,7 @@ import 'package:head_x/firebase/recently/recently_opreation.dart';
 import 'package:head_x/presentation/home/main_home.dart';
 import 'package:head_x/presentation/product_details/product_details.dart';
 import 'package:head_x/presentation/widgets/app_bar_widget.dart';
+import 'package:lottie/lottie.dart';
 // import '../../../application/recently_products/recently_products_bloc.dart';
 import '../../../application/recently_products/recently_products_bloc.dart';
 import '../../../application/wishlist_cheking/wishlist_checking_bloc.dart';
@@ -31,6 +32,7 @@ class MainWirelessHeadphones extends StatelessWidget {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       BlocProvider.of<WishlistCheckingBloc>(context)
           .add(Checking(id: userId, idofMain: id));
+      BlocProvider.of<ProductListBloc>(context).add(InitializeDisplay(id: id));
     });
     return Scaffold(
       appBar: PreferredSize(
@@ -49,8 +51,28 @@ class MainWirelessHeadphones extends StatelessWidget {
                 child: BlocBuilder<ProductListBloc, ProductListState>(
                   builder: (context, state) {
                     if (state.productList.isEmpty) {
-                      return const Center(
-                        child: CircularProgressIndicator(),
+                      return Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                                height: myMediaQueryData.size.height * 0.3,
+                                // width: myMediaQueryD,
+                                child: Lottie.asset(
+                                  "assets/105560-no-product.json",
+                                )),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            const Text(
+                              "No Products Added",
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 30),
+                            ),
+                          ],
+                        ),
                       );
                     } else if (state.isLoading == true) {
                       return const Center(

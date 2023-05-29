@@ -12,6 +12,7 @@ import 'package:head_x/presentation/categories/wireless_category/main_wireless.d
 import 'package:head_x/presentation/home/main_home.dart';
 import 'package:head_x/presentation/product_details/product_details.dart';
 import 'package:head_x/presentation/widgets/app_bar_widget.dart';
+import 'package:lottie/lottie.dart';
 import '../../application/wishlist_cheking/wishlist_checking_bloc.dart';
 import '../../core/uiConstWidget.dart';
 import '../../core/uiConstant.dart';
@@ -45,8 +46,17 @@ class MainWishlist extends StatelessWidget {
                       );
                     }
                     if (state.values.isEmpty) {
-                      return const Center(
-                        child: Text("No Data"),
+                      return Column(
+                        children: [
+                          Lottie.asset('assets/123724-wishlist-empty.json'),
+                          const Text(
+                            "Please add any items into Wishlist",
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold),
+                          )
+                        ],
                       );
                     }
 
@@ -66,8 +76,10 @@ class MainWishlist extends StatelessWidget {
                             Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) {
                                 return MainProductDetails(
-                                    id: data['id'], index: index,checking: "normal",);
-
+                                  id: data['id'],
+                                  index: index,
+                                  checking: "normal",
+                                );
                               },
                             ));
                             BlocProvider.of<ProductListBloc>(context)

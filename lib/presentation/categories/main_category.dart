@@ -71,9 +71,7 @@ class CategoryMain extends StatelessWidget {
                                               title: document['name']);
                                         },
                                       ));
-                                      BlocProvider.of<ProductListBloc>(context)
-                                          .add(InitializeDisplay(
-                                              id: document['id']));
+                                    
                                     },
                                     child: Container(
                                       width: 100,

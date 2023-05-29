@@ -29,15 +29,20 @@ class ProductSpecification extends StatelessWidget {
           ),
         ),
         Expanded(
-          child: Text(
-            text2,
-            style: TextStyle(
-              // overflow: TextOverflow.ellipsis,
-              fontWeight: FontWeight.bold,
-              fontSize: 22,
+          child: Padding(
+            padding: EdgeInsets.only(left: 10),
+            child: Text(
+              text2,
+              softWrap: true,
+              maxLines: 40,
+              style: TextStyle(
+                overflow: TextOverflow.ellipsis,
+                fontWeight: FontWeight.bold,
+                fontSize: 22,
+              ),
             ),
           ),
-        )
+        ),
       ],
     );
   }

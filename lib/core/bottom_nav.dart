@@ -1,16 +1,13 @@
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:head_x/application/cart_showing/cart_showing_bloc.dart';
 import 'package:head_x/presentation/account/main_account.dart';
 import 'package:head_x/presentation/cart/main_cart.dart';
 import 'package:head_x/presentation/categories/main_category.dart';
 import 'package:head_x/presentation/home/main_home.dart';
-import 'package:head_x/presentation/notification/main_notification.dart';
+// import 'package:head_x/presentation/notification/main_notification.dart';
 
 class BottomNav extends StatefulWidget {
-  BottomNav({Key? key}) : super(key: key);
+  const BottomNav({Key? key}) : super(key: key);
 
   @override
   State<BottomNav> createState() => _BottomNavState();
@@ -24,7 +21,6 @@ class _BottomNavState extends State<BottomNav> {
     List pages = [
       MainHome(),
       CategoryMain(),
-      const NotificationMain(),
       const MainAccount(),
       const MainCart(),
     ];
@@ -45,7 +41,6 @@ class _BottomNavState extends State<BottomNav> {
           onDestinationSelected: (currentSelect) =>
               setState(() => this.currentSelect = currentSelect),
           height: 60,
-          //backgroundColor: musiCityBgColor,
           destinations: const [
             NavigationDestination(
                 icon: Icon(
@@ -61,14 +56,6 @@ class _BottomNavState extends State<BottomNav> {
                 ),
                 selectedIcon: Icon(Icons.category_outlined),
                 label: "Categories"),
-            NavigationDestination(
-              icon: Icon(
-                Icons.notifications_active,
-                // color: Colors.white60,
-              ),
-              selectedIcon: Icon(Icons.notifications_active_outlined),
-              label: "Notification",
-            ),
             NavigationDestination(
               icon: Icon(
                 Icons.account_circle_rounded,

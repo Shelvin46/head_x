@@ -50,8 +50,6 @@ class MainProductDetails extends StatelessWidget {
       bottomSheet: BlocBuilder<ProductListBloc, ProductListState>(
         builder: (context, state) {
           final data = state.productList[index];
-          // log(x)
-          log(data.toString());
           return Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             key: UniqueKey(),
@@ -164,7 +162,7 @@ class MainProductDetails extends StatelessWidget {
         scrollDirection: Axis.vertical,
         child: SizedBox(
           width: myMediaQueryData.size.width * 1,
-          height: myMediaQueryData.size.height * 1.4,
+          height: myMediaQueryData.size.height * 1.600,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -205,7 +203,7 @@ class MainProductDetails extends StatelessWidget {
                               );
                             },
                             options: CarouselOptions(
-                              pageSnapping: false,
+                              // pageSnapping: false,
                               enableInfiniteScroll: false,
                               height: 350,
                               autoPlay: true,
@@ -294,14 +292,6 @@ class MainProductDetails extends StatelessWidget {
                   );
                 },
               ),
-              Padding(
-                padding:
-                    EdgeInsets.only(left: myMediaQueryData.size.width * 0.02),
-                child: Text(
-                  "Available Colors",
-                  style: productPriceStyle,
-                ),
-              ),
               productGap2,
               Padding(
                 padding:
@@ -319,12 +309,7 @@ class MainProductDetails extends StatelessWidget {
                         text1: "Color:",
                         text2: value['color'],
                       ),
-                      productGap2,
-                      ProductSpecification(
-                        color: specColor,
-                        text1: "Length:",
-                        text2: value['lenght'].toString(),
-                      ),
+                      // productGap2,
                       productGap2,
                       ProductSpecification(
                         color: specColor,

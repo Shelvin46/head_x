@@ -171,7 +171,6 @@ class MainAccount extends StatelessWidget {
                           },
                         ));
                         // log(globalFirstName.text);
-                      
                       },
                       child: AccountDetails(
                           icon: Icons.account_circle_outlined,
@@ -191,12 +190,6 @@ class MainAccount extends StatelessWidget {
                           icon: Icons.location_on_outlined,
                           text: "Saved Addresses"),
                     ),
-                    AccountDetails(
-                        icon: Icons.notifications_none,
-                        text: "Nottification Settings"),
-                    AccountDetails(
-                        icon: Icons.lock_outline_rounded,
-                        text: "Change Password"),
                     SizedBox(
                       height: myMediaQueryData.size.height * 0.02,
                     ),

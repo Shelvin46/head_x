@@ -313,3 +313,5 @@ const decoration = BoxDecoration(
     borderRadius: BorderRadius.all(Radius.circular(8)));
 
 const nameStyle = TextStyle(fontSize: 26, fontWeight: FontWeight.bold);
+const emptyStyle =
+    TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold);

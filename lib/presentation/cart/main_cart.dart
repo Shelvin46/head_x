@@ -13,6 +13,7 @@ import 'package:head_x/main.dart';
 import 'package:head_x/presentation/product_details/product_details.dart';
 import 'package:head_x/presentation/profile/addresses/widgets/select_address.dart';
 import 'package:head_x/presentation/widgets/app_bar_widget.dart';
+import 'package:lottie/lottie.dart';
 
 import '../../application/address_showing/address_showing_bloc.dart';
 // import '../../application/order_summary/order_summary_bloc.dart';
@@ -273,8 +274,17 @@ class MainCart extends StatelessWidget {
               ),
             );
           }
-          return const Center(
-            child: Text('Please Add any items into Cart'),
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Lottie.asset('assets/4496-empty-cart.json'),
+                const Text(
+                  'Please Add any items into Cart',
+                  style: emptyStyle,
+                ),
+              ],
+            ),
           );
         },
       ),

@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:head_x/application/order_details/order_details_bloc.dart';
 import 'package:head_x/main.dart';
 import 'package:head_x/presentation/order_details/main_order_details.dart';
-// import 'package:head_x/presentation/product_details/product_details.dart';
 import 'package:head_x/presentation/widgets/app_bar_widget.dart';
+import 'package:lottie/lottie.dart';
 
 import '../../core/uiConstWidget.dart';
 
@@ -28,8 +28,17 @@ class MainOrders extends StatelessWidget {
                 child: CircularProgressIndicator(),
               );
             } else if (state.orderDetails.isEmpty) {
-              return const Center(
-                child: Text("No Ordered Products"),
+              return Center(
+                child: Column(
+                  // mainAxisAlignment: MainAxisAlignment.center/,
+                  children: [
+                    Lottie.asset('assets/134499-embty-cart.json'),
+                    const Text(
+                      "No Ordered Products",
+                      style: emptyStyle,
+                    ),
+                  ],
+                ),
               );
             }
             return ListView.separated(
