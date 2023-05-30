@@ -33,10 +33,10 @@ class ProductListBloc extends Bloc<ProductListEvent, ProductListState> {
       return emit(
           ProductListState(productList: productDetails, isLoading: false));
     });
-    on<RecentlyDetails>((event, emit) async {
-      return emit(
-          ProductListState(productList: recentlyAllProducts, isLoading: false));
-    });
+    // on<RecentlyDetails>((event, emit) async {
+    //   return emit(
+    //       ProductListState(productList: recentlyAllProducts, isLoading: false));
+    // });
     on<CartDetails>((event, emit) async {
       List<dynamic> cartProducts = await CartOperation().get(userId);
       return emit(

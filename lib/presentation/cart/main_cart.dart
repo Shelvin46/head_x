@@ -33,9 +33,10 @@ class MainCart extends StatelessWidget {
     });
 
     return Scaffold(
-      appBar: PreferredSize(
-          preferredSize: const Size.fromHeight(50),
-          child: AppBarWidget(title: "My Cart", appbarColor: catbarColor)),
+      appBar: const PreferredSize(
+          preferredSize: Size.fromHeight(50),
+          child:
+              AppBarWidget(title: "My Cart", appbarColor: Color(0xFF7AABA8))),
       body: Container(
         width: double.infinity,
         height: double.infinity,
@@ -265,7 +266,7 @@ class MainCart extends StatelessWidget {
               child: Container(
                 width: double.infinity,
                 height: 60,
-                color: catbarColor,
+                color: Color(0xFF7AABA8),
                 child: Center(
                     child: Text(
                   "Check Out",

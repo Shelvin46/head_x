@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 Color loginPageCr = Colors.white;
-Color textFormCl = const Color(0xFF9C8FC0);
+const textFormCl = Colors.grey;
 Color createColor = const Color(0xFF28B4BD);
 // Color notiColor=
 Color cartbacColor = const Color.fromARGB(67, 171, 163, 163);

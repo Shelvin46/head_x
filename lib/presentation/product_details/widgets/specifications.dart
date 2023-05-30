@@ -18,7 +18,7 @@ class ProductSpecification extends StatelessWidget {
 
       children: [
         Padding(
-          padding: EdgeInsets.only(left: 10),
+          padding: const EdgeInsets.only(left: 10),
           child: Text(
             text1,
             style: TextStyle(

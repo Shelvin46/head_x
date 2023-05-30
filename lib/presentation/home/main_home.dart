@@ -15,7 +15,6 @@ import 'package:head_x/presentation/search/main_search.dart';
 import 'package:head_x/presentation/splash_screen/splash_screen.dart';
 import '../../application/countof_cart/countof_cart_bloc.dart';
 import '../../application/search_bloc/search_bloc_bloc.dart';
-import '../../firebase/recently/recently_opreation.dart';
 import '../../main.dart';
 // import '../categories/wireless_category/main_wireless.dart';
 
@@ -40,15 +39,10 @@ class MainHome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     BlocProvider.of<CountofCartBloc>(context).add(InitializeCount());
-    BlocProvider.of<RecentlyProductsBloc>(context).add(InitialRecently());
-    BlocProvider.of<ProductListBloc>(context).add(RecentlyDetails());
-    BlocProvider.of<WishlistCheckingBloc>(context).add(RecentlyWishlist());
     BlocProvider.of<ProductListBloc>(context).add(SearchIntoDetails());
     BlocProvider.of<WishlistCheckingBloc>(context)
         .add(SearchWishlist(wishlistProducts: wishlistAllProducts));
-    // log(globalFirstName.text.toString());
     function();
-
     return Scaffold(
       body: SafeArea(
           child: SingleChildScrollView(
@@ -269,7 +263,7 @@ class MainHome extends StatelessWidget {
   }
 
   Future<void> function() async {
-    recentlyAllProducts = await RecentlyOpreation().recentlyGet();
+    // recentlyAllProducts = await RecentlyOpreation().recentlyGet();
     final docData = await gettingData(userId, "users");
     wishlistAllProducts =
         docData.data()?['wishlist'] ?? []; //all wishlist prducts

@@ -23,7 +23,7 @@ SizedBox loginPageGap4 = SizedBox(
 BoxDecoration textformRadius = BoxDecoration(
     color: textFormCl,
     borderRadius: const BorderRadius.all(Radius.circular(8)));
-TextStyle labelColor = const TextStyle(color: Colors.white);
+const labelColor = const TextStyle(color: Colors.black);
 SizedBox loginPageGap3 = SizedBox(
   height: myMediaQueryData.size.height * 0.02,
 );
@@ -201,10 +201,10 @@ TextStyle productName =
     const TextStyle(fontWeight: FontWeight.bold, fontSize: 16);
 EdgeInsets deletePadding =
     EdgeInsets.only(left: myMediaQueryData.size.width * 0.3);
-Icon deleteIcon = const Icon(
+const deleteIcon = Icon(
   Icons.delete,
   size: 37,
-  color: Color.fromARGB(255, 234, 150, 225),
+  color: Color(0xFF7AABA8),
 );
 TextStyle checkOut = const TextStyle(
   color: Colors.white,

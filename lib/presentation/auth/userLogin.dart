@@ -119,9 +119,6 @@ class _UserLoginState extends State<UserLogin> {
                         email: emailController.text,
                         password: passwordController.text)
                     .then((value) async {
-                  // log(x)
-                  // log("one");
-                  // log(userId.toString());aw
                   await AddingDetails().detailsAdding();
                   Navigator.of(context).pop();
                   Navigator.pushReplacement(context, MaterialPageRoute(

@@ -1,7 +1,4 @@
-import 'dart:developer';
 
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:head_x/application/wishlist_listing/wishlist_listing_bloc.dart';
@@ -10,16 +7,14 @@ import 'package:head_x/firebase/firebase_services/google_signin.dart';
 import 'package:head_x/main.dart';
 import 'package:head_x/presentation/account/widgets/account_details.dart';
 import 'package:head_x/presentation/auth/userLogin.dart';
-import 'package:head_x/presentation/order_details/main_order_details.dart';
 import 'package:head_x/presentation/order_details/main_orders.dart';
 import 'package:head_x/presentation/profile/addresses/main_address.dart';
 import 'package:head_x/presentation/profile/edit_profile/edit_profile_one.dart';
 import 'package:head_x/presentation/widgets/app_bar_widget.dart';
+import 'package:head_x/presentation/widgets/privacy_policy.dart';
+import 'package:head_x/presentation/widgets/terms_and_conditions.dart';
 import 'package:head_x/presentation/wishlist/main_wishlist.dart';
-
 import '../../application/address_showing/address_showing_bloc.dart';
-import '../../firebase/personDetails/details.dart';
-import '../auth/userSignup.dart';
 
 class MainAccount extends StatelessWidget {
   const MainAccount({super.key});
@@ -201,30 +196,171 @@ class MainAccount extends StatelessWidget {
                         style: accText,
                       ),
                     ),
-                    AccountDetails(
-                        icon: Icons.edit_document, text: "Terms & Conditions"),
-                    AccountDetails(icon: Icons.info_outline, text: "About"),
+                    InkWell(
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                                title: const Text('Terms and Conditions'),
+                                content: SingleChildScrollView(
+                                  child: Column(
+                                    //  mainAxisAlignment: MainAxisAlignment.cent,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: const [
+                                      Text('$termsAndConditions'
+                                          '\n'
+                                          '\n'
+                                          '$nextLines1'
+                                          '\n'),
+                                      Text(
+                                        headingOne,
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 18),
+                                      ),
+                                      Text(nextLines3),
+                                      Text(
+                                        'Contact Us',
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 18),
+                                      ),
+                                      Text(nextLines4)
+                                    ],
+                                  ),
+                                ),
+                                actions: [
+                                  TextButton(
+                                    child: const Text('Close'),
+                                    onPressed: () {
+                                      Navigator.of(context)
+                                          .pop(); // Close the dialog
+                                    },
+                                  ),
+                                ]);
+                          },
+                        );
+                      },
+                      child: AccountDetails(
+                          icon: Icons.edit_document,
+                          text: "Terms & Conditions"),
+                    ),
+                    InkWell(
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                                title: const Text('Terms and Conditions'),
+                                content: SingleChildScrollView(
+                                  child: Column(
+                                    //  mainAxisAlignment: MainAxisAlignment.cent,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: const [
+                                      Text('$privacyLine1'
+                                          '\n'),
+                                      Text(
+                                        'Information Collection and Use',
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 18),
+                                      ),
+                                      Text('$privacyLine2' '\n'),
+                                      Text(
+                                        'Log Data',
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 18),
+                                      ),
+                                      Text(
+                                        '$privacyLine3' '\n',
+                                      ),
+                                      Text(
+                                        'Cookies',
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 18),
+                                      ),
+                                      Text(
+                                        '$privacyLine4' '\n',
+                                      ),
+                                      Text(
+                                        'Children’s Privacy',
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 18),
+                                      ),
+                                      Text(
+                                        '$privacyLine5' '\n',
+                                      ),
+                                      Text(
+                                        'Changes to This Privacy Policy',
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 18),
+                                      ),
+                                      Text(
+                                        '$privacyLine6' '\n',
+                                      ),
+                                      Text(
+                                        'Contact US',
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 18),
+                                      ),
+                                      Text(
+                                        '$privacyLine7' '\n',
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                actions: [
+                                  TextButton(
+                                    child: const Text('Close'),
+                                    onPressed: () {
+                                      Navigator.of(context)
+                                          .pop(); // Close the dialog
+                                    },
+                                  ),
+                                ]);
+                          },
+                        );
+                      },
+                      child: AccountDetails(
+                          icon: Icons.privacy_tip_outlined,
+                          text: "Privacy Policy"),
+                    ),
+                    SizedBox(
+                      height: myMediaQueryData.size.height * 0.04,
+                    ),
                     Center(
-                      child: InkWell(
-                        onTap: () async {
-                          await FiireBaseGoogle().signOut();
-                          Navigator.pushReplacement(context, MaterialPageRoute(
-                            builder: (context) {
-                              return UserLogin();
-                            },
-                          ));
-                        },
-                        child: Container(
-                          height: myMediaQueryData.size.height * 0.04,
-                          width: myMediaQueryData.size.width * 0.2,
-                          color: Colors.blue,
-                          child: Padding(
-                            padding: EdgeInsets.only(
-                                left: myMediaQueryData.size.width * 0.02),
-                            child: Text(
-                              "Logout",
-                              style: logStyle,
-                            ),
+                      child: SizedBox(
+                        height: 50,
+                        width: 100,
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            await FiireBaseGoogle().signOut();
+                            Navigator.pushReplacement(context,
+                                MaterialPageRoute(
+                              builder: (context) {
+                                return UserLogin();
+                              },
+                            ));
+                          },
+                          child: Text(
+                            'Log Out',
+                            style: TextStyle(color: Colors.blue, fontSize: 18),
                           ),
                         ),
                       ),

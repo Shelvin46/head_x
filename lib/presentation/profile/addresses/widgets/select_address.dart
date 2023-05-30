@@ -136,6 +136,7 @@ class _AddressSelectingState extends State<AddressSelecting> {
                     ));
                     if (widget.checking == 'normal') {
                       each.addAll(widget.eachProduct);
+                      
                       // List<Map<String, dynamic>> product = widget.eachProduct;
                       BlocProvider.of<OrderSummaryBloc>(context)
                           .add(EachProductCheckout(eachProduct: each));

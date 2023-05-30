@@ -40,15 +40,15 @@ class WishlistCheckingBloc
           valuesOfWishlist: event.wishlistProducts,
           isLoading: false));
     });
-    on<RecentlyWishlist>((event, emit) async {
-      final recentlyProducts = await gettingData(userId, "users");
-      List<dynamic> wishlistProducts =
-          recentlyProducts.data()?['wishlist'] ?? [];
-      return emit(WishlistCheckingState(
-          valuesOfEachCategory: recentlyAllProducts,
-          valuesOfWishlist: wishlistProducts,
-          isLoading: false));
-    });
+    // on<RecentlyWishlist>((event, emit) async {
+    //   final recentlyProducts = await gettingData(userId, "users");
+    //   List<dynamic> wishlistProducts =
+    //       recentlyProducts.data()?['wishlist'] ?? [];
+    //   return emit(WishlistCheckingState(
+    //       valuesOfEachCategory: recentlyAllProducts,
+    //       valuesOfWishlist: wishlistProducts,
+    //       isLoading: false));
+    // });
     on<CartWishlistChecking>((event, emit) async {
       final docData = await gettingData(userId, 'users');
       List<dynamic> wishlistProducts = docData.data()?['wishlist'] ?? [];

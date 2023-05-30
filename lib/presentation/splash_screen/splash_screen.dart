@@ -11,7 +11,7 @@ import '../../application/wishlist_cheking/wishlist_checking_bloc.dart';
 
 
 List<dynamic> productDetails = [];
-List<Map<String, dynamic>> recentlyAllProducts = [];
+// List<Map<String, dynamic>> recentlyAllProducts = [];
 List<dynamic> wishlistAllProducts = [];
 
 class SplahScrenn extends StatefulWidget {
@@ -51,10 +51,7 @@ class _SplahScrennState extends State<SplahScrenn> {
   }
 
   Future<void> checkingTheUser() async {
-    productDetails = await get(); // all products
-    // // all recentlu
-
-    
+    productDetails = await get();  
     BlocProvider.of<WishlistCheckingBloc>(context)
         .add(SearchWishlist(wishlistProducts: wishlistAllProducts));
 

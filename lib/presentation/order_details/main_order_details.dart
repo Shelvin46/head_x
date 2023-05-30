@@ -27,7 +27,8 @@ class MainOrderDetails extends StatelessWidget {
       required this.remaining,
       required this.image,
       required this.total,
-      required this.index})
+      required this.index,
+      required this.status})
       : super(key: key);
   final String name;
   final String remaining;
@@ -37,9 +38,11 @@ class MainOrderDetails extends StatelessWidget {
   final String image;
   final dynamic total;
   final int index;
+  final String status;
 
   @override
   Widget build(BuildContext context) {
+    log(status.toString());
     return Scaffold(
       appBar: const PreferredSize(
         preferredSize: Size.fromHeight(50),
@@ -129,59 +132,61 @@ class MainOrderDetails extends StatelessWidget {
           SizedBox(
             height: myMediaQueryData.size.height * 0.02,
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              const Text('Do you want to cancel this order?'),
-              ElevatedButton(
-                  onPressed: () {
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return AlertDialog(
-                          title: const Text('Cancel Order'),
-                          content: const Text(
-                              'Are you sure you want to cancel this order?'),
-                          actions: [
-                            TextButton(
-                              child: const Text('Cancel'),
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                            ),
-                            ElevatedButton(
-                              child: const Text('Delete'),
-                              onPressed: () async {
-                                showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return const Center(
-                                      child: CircularProgressIndicator(),
-                                    );
-                                  },
-                                );
-                                await cancelOrder();
-                                await deleteFromOrders(index);
-                                BlocProvider.of<OrderDetailsBloc>(context)
-                                    .add(InitializeDetails());
-                                Navigator.of(context).pop();
-                                Navigator.pop(context);
-                                Navigator.pushAndRemoveUntil(context,
-                                    MaterialPageRoute(
-                                  builder: (context) {
-                                    return BottomNav();
-                                  },
-                                ), (route) => false);
-                              },
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                  },
-                  child: const Text('Cancel'))
-            ],
-          )
+          status == "Delivered"
+              ? Container()
+              : Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    const Text('Do you want to cancel this order?'),
+                    ElevatedButton(
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                title: const Text('Cancel Order'),
+                                content: const Text(
+                                    'Are you sure you want to cancel this order?'),
+                                actions: [
+                                  TextButton(
+                                    child: const Text('Cancel'),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                  ElevatedButton(
+                                    child: const Text('Delete'),
+                                    onPressed: () async {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return const Center(
+                                            child: CircularProgressIndicator(),
+                                          );
+                                        },
+                                      );
+                                      await cancelOrder();
+                                      await deleteFromOrders(index);
+                                      BlocProvider.of<OrderDetailsBloc>(context)
+                                          .add(InitializeDetails());
+                                      Navigator.of(context).pop();
+                                      Navigator.pop(context);
+                                      Navigator.pushAndRemoveUntil(context,
+                                          MaterialPageRoute(
+                                        builder: (context) {
+                                          return  BottomNav();
+                                        },
+                                      ), (route) => false);
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        },
+                        child: const Text('Cancel'))
+                  ],
+                )
         ],
       ),
       bottomSheet: Container(

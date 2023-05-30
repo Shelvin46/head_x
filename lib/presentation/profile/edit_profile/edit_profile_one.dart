@@ -24,7 +24,7 @@ class EditProfileOne extends StatelessWidget {
       appBar: const PreferredSize(
           preferredSize: Size.fromHeight(50),
           child: AppBarWidget(
-              title: "Edit Profile", appbarColor: Color(0xFF24C7EB))),
+              title: "Edit Profile", appbarColor: Color(0xFF798BE7))),
       body: SingleChildScrollView(
         child: BlocBuilder<DetailsCheckingBloc, DetailsCheckingState>(
           builder: (context, state) {
@@ -55,38 +55,41 @@ class EditProfileOne extends StatelessWidget {
                     width: double.infinity,
                     height: myMediaQueryData.size.height * 0.2,
                     decoration: const BoxDecoration(
-                        color: Color(0xFF24C7EB),
-                        borderRadius: BorderRadius.all(Radius.circular(90))),
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(blurRadius: 4, color: Colors.grey)
+                        ],
+                        borderRadius: BorderRadius.all(Radius.circular(50))),
                     child: Column(
                       children: [
                         Padding(
                           padding: const EdgeInsets.fromLTRB(45, 0, 20, 0),
                           child: TextField(
                             controller: nameController,
-                            decoration: InputDecoration(
-                                border: const UnderlineInputBorder(
+                            decoration: const InputDecoration(
+                                border: UnderlineInputBorder(
                                     borderSide: BorderSide(
-                                  color: Colors.white,
+                                  color: Colors.black,
                                 )),
                                 labelText: "Firstname",
                                 labelStyle: labelColor),
                             style: const TextStyle(
-                                color: Colors.white, fontSize: 20),
+                                color: Colors.black, fontSize: 20),
                           ),
                         ),
                         Padding(
                           padding: const EdgeInsets.fromLTRB(45, 0, 26, 0),
                           child: TextField(
                             controller: lastNameController,
-                            decoration: InputDecoration(
-                                border: const UnderlineInputBorder(
+                            decoration: const InputDecoration(
+                                border: UnderlineInputBorder(
                                     borderSide: BorderSide(
-                                  color: Colors.white,
+                                  color: Colors.black,
                                 )),
                                 labelText: "Lastname",
                                 labelStyle: labelColor),
                             style: const TextStyle(
-                                color: Colors.white, fontSize: 20),
+                                color: Colors.black, fontSize: 20),
                           ),
                         ),
                       ],
@@ -117,7 +120,8 @@ class EditProfileOne extends StatelessWidget {
                     height: myMediaQueryData.size.height * 0.06,
                     width: myMediaQueryData.size.width * 0.340,
                     decoration: const BoxDecoration(
-                        color: Color(0xFF24C7EB),
+                        color: Color(0xFF798BE7),
+                        boxShadow: [BoxShadow(blurRadius: 2)],
                         borderRadius: BorderRadius.all(Radius.circular(90))),
                     child: const Center(
                       child: Text(
@@ -136,23 +140,26 @@ class EditProfileOne extends StatelessWidget {
                     width: double.infinity,
                     height: myMediaQueryData.size.height * 0.2,
                     decoration: const BoxDecoration(
-                        color: Color(0xFF24C7EB),
-                        borderRadius: BorderRadius.all(Radius.circular(90))),
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(blurRadius: 4, color: Colors.grey)
+                        ],
+                        borderRadius: BorderRadius.all(Radius.circular(50))),
                     child: Column(
                       children: [
                         Padding(
                           padding: const EdgeInsets.fromLTRB(45, 0, 20, 0),
                           child: TextField(
                             controller: mobileNoController,
-                            decoration: InputDecoration(
-                                border: const UnderlineInputBorder(
+                            decoration: const InputDecoration(
+                                border: UnderlineInputBorder(
                                     borderSide: BorderSide(
                                   color: Colors.white,
                                 )),
                                 labelText: "Mobile no",
                                 labelStyle: labelColor),
                             style: const TextStyle(
-                                color: Colors.white, fontSize: 20),
+                                color: Colors.black, fontSize: 20),
                           ),
                         ),
                         Padding(
@@ -167,7 +174,7 @@ class EditProfileOne extends StatelessWidget {
                                 labelText: "Mail id",
                                 labelStyle: labelColor),
                             style: const TextStyle(
-                                color: Colors.white, fontSize: 20),
+                                color: Colors.black, fontSize: 20),
                           ),
                         ),
                       ],
@@ -198,7 +205,8 @@ class EditProfileOne extends StatelessWidget {
                     height: myMediaQueryData.size.height * 0.06,
                     width: myMediaQueryData.size.width * 0.340,
                     decoration: const BoxDecoration(
-                        color: Color(0xFF24C7EB),
+                        color: Color(0xFF798BE7),
+                        boxShadow: [BoxShadow(blurRadius: 2)],
                         borderRadius: BorderRadius.all(Radius.circular(90))),
                     child: const Center(
                       child: Text(

@@ -57,6 +57,7 @@ class MainOrders extends StatelessWidget {
                             image: data['image'],
                             total: data['price'] * data['count'],
                             index: index,
+                            status: data['status'],
                           );
                         },
                       ));
