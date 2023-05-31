@@ -63,7 +63,7 @@ class _UserLoginState extends State<UserLogin> {
                     controller: emailController,
                     decoration: InputDecoration(
                       border: InputBorder.none,
-                      labelText: "User id",
+                      labelText: "Mail id",
                       labelStyle: labelColor,
                       contentPadding: const EdgeInsets.only(left: 16.0),
                     ),
@@ -98,11 +98,7 @@ class _UserLoginState extends State<UserLogin> {
             ),
           ),
           loginPageGap3,
-          Padding(
-            padding: EdgeInsets.only(left: myMediaQueryData.size.width * 0.4),
-            child: fPassword,
-          ),
-          loginPageGap4,
+          // loginPageGap4,
           InkWell(
             onTap: () {
               if (_formKey.currentState!.validate()) {

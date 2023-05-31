@@ -1,6 +1,6 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:head_x/application/for_username/for_username_bloc.dart';
 import 'package:head_x/application/wishlist_listing/wishlist_listing_bloc.dart';
 import 'package:head_x/core/uiConstWidget.dart';
 import 'package:head_x/firebase/firebase_services/google_signin.dart';
@@ -21,12 +21,37 @@ class MainAccount extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      BlocProvider.of<ForUsernameBloc>(context).add(InitializeUsername());
+    });
     return Scaffold(
-      appBar: const PreferredSize(
-        preferredSize: Size.fromHeight(50),
-        child: AppBarWidget(
-            title: "Hey! Shelvin Varghese", appbarColor: Colors.white),
-      ),
+      appBar: PreferredSize(
+          preferredSize: const Size.fromHeight(50),
+          child: BlocBuilder<ForUsernameBloc, ForUsernameState>(
+            builder: (context, state) {
+              final name = state.name;
+              return Container(
+                width: 100,
+                height: 100,
+                color: Colors.white,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      width: myMediaQueryData.size.width * 0.04,
+                    ),
+                    Padding(
+                        padding: EdgeInsets.only(
+                            top: myMediaQueryData.size.height * 0.03),
+                        child: Text(
+                          "Hey!! $name",
+                          style: accSection,
+                        ))
+                  ],
+                ),
+              );
+            },
+          )),
       body: Container(
         width: double.infinity,
         height: double.infinity,

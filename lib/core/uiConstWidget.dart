@@ -20,10 +20,10 @@ SizedBox loginPageGap2 = SizedBox(
 SizedBox loginPageGap4 = SizedBox(
   height: myMediaQueryData.size.height * 0.05,
 );
-BoxDecoration textformRadius = BoxDecoration(
-    color: textFormCl,
-    borderRadius: const BorderRadius.all(Radius.circular(8)));
-const labelColor = const TextStyle(color: Colors.black);
+const textformRadius = BoxDecoration(
+    color: Color(0xFF9C8FC0),
+    borderRadius: BorderRadius.all(Radius.circular(8)));
+const labelColor = TextStyle(color: Colors.white);
 SizedBox loginPageGap3 = SizedBox(
   height: myMediaQueryData.size.height * 0.02,
 );
@@ -126,10 +126,9 @@ const allText = Text(
   style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
 );
 // <-------------------------------------------------------------------MainHome---------------------------------------------------------------------------------------------------------------->
-TextStyle catSection = const TextStyle(
+const catSection = TextStyle(
   color: Colors.white,
   fontWeight: FontWeight.bold,
-  // fontStyle: FontStyle.italic,
   fontSize: 28,
 );
 //<------------------------------------------------------------------Category--------------------------------------------------------------------------------------------------------------------------->

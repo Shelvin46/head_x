@@ -7,6 +7,7 @@ import 'package:head_x/application/all_products/all_products_bloc.dart';
 import 'package:head_x/application/cart_showing/cart_showing_bloc.dart';
 import 'package:head_x/application/countof_cart/countof_cart_bloc.dart';
 import 'package:head_x/application/details_checking/details_checking_bloc.dart';
+import 'package:head_x/application/for_username/for_username_bloc.dart';
 import 'package:head_x/application/indicator_bloc/indicator_bloc_bloc.dart';
 import 'package:head_x/application/order_details/order_details_bloc.dart';
 import 'package:head_x/application/order_summary/order_summary_bloc.dart';
@@ -16,7 +17,6 @@ import 'package:head_x/application/search_bloc/search_bloc_bloc.dart';
 import 'package:head_x/application/wishlist_cheking/wishlist_checking_bloc.dart';
 import 'package:head_x/application/wishlist_listing/wishlist_listing_bloc.dart';
 import 'package:head_x/presentation/splash_screen/splash_screen.dart';
-
 
 late MediaQueryData myMediaQueryData;
 void main() async {
@@ -99,6 +99,11 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) {
             return DetailsCheckingBloc();
+          },
+        ),
+        BlocProvider(
+          create: (context) {
+            return ForUsernameBloc();
           },
         )
       ],
